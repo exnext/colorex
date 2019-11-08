@@ -151,12 +151,12 @@ const colorNames = {
 
 const colorArray = [];
 
-Object.keys(colorNames).forEach(function (key) {
+Object.keys(colorNames).forEach((key) =>
     colorArray.push({
         name: key,
         value: colorNames[key]
-    });
-});
+    })
+);
 
 Object.freeze(colorNames);
 Object.freeze(colorArray);

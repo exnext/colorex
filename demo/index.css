@@ -1,0 +1,11 @@
+button {
+    margin: 5px;
+    padding: 5px;
+    border: none;
+    width: 60px;
+    font-weight: bold;
+}
+
+input {
+    margin: 5px;
+}

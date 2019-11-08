@@ -59,7 +59,6 @@ function colorConvert(color) {
 
     function name() {
         let color = colorArray.find((color) => color.value == hex(false));
-        
         return color ? color.value : hex();
     }
 
