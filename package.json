@@ -1,0 +1,36 @@
+{
+  "name": "colorex",
+  "version": "0.0.1",
+  "description": "color picker",
+  "main": "colorex.js",
+  "scripts": {
+    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exnext/colorex.git"
+  },
+  "keywords": [
+    "color",
+    "picker"
+  ],
+  "author": "exnext",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/exnext/colorex/issues"
+  },
+  "homepage": "https://github.com/exnext/colorex#readme",
+  "dependencies": {
+    "jquery": "^3.4.1",
+    "tinycolor2": "^1.4.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "babel-loader": "^8.0.6",
+    "express": "^4.17.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  }
+}

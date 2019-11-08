@@ -1,0 +1,31 @@
+.color_picker {
+    position: relative;
+    white-space: nowrap;
+}
+
+.color_picker canvas {
+    margin: 0px 5px;
+}
+
+.sel_color {
+    width: 24px;
+    height: 24px;
+    border: 2px solid white;
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
+}
+
+.sel_rainbow {
+    width: 31px;
+    height: 10px;
+    left: 418px;
+    border: 2px solid white;
+    position: absolute;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
+}
+
+span {
+    margin: 5px;
+    border: none;
+}
