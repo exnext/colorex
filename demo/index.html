@@ -5,9 +5,6 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>colorex demo</title>
     <link href="../src/colorex.css" rel="stylesheet">
-    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="../node_modules/tinycolor2/dist/tinycolor-min.js"></script>
-    <script src="../src/colorex.js"></script>
 </head>
 
 <body>
@@ -19,101 +16,12 @@
         <div id="selColor" class="sel_color"></div>
         <div id="selRainbow" class="sel_rainbow"></div>
     </div>
+    
     <div id="colors">
 
     </div>
 
-
-    <script>
-        let rainbow = document.getElementById("cpRainbow");
-        let gradient = document.getElementById("cpGradient");
-        let selRainbow = document.getElementById("selRainbow");
-        let selColor = document.getElementById("selColor");
-
-        let colors = document.getElementById("colors");
-        let ca = [];
-
-        [
-            '#ff0000', '#ff003f', '#ff007f', '#ff0080', '#ff00cf',
-            '#ff00ff', '#cf00ff', '#8000ff', '#7f00ff', '#3f00ff',
-            '#0000ff', '#003fff', '#007fff', '#0080ff', '#00cfff',
-            '#00ffff', '#00ffcf', '#00ff80', '#00ff7f', '#00ff3f',
-            '#00ff00', '#3fff00', '#7fff00', '#80ff00', '#cfff00',
-            '#ffff00', '#ffcf00', '#ff8000', '#ff7f00', '#ff3f00',
-            '#ff0000'
-            // "red", "fuchsia", "blue", "cyan", "lime", "yellow", "red",
-            // "#ff007f", "#ff0080",
-            // "#00ff7f", "#00ff80",
-            // "#7f00ff", "#8000ff",
-            // "#7fff00", "#80ff00",
-            // "#007fff", "#0080ff",
-            // "#ff7f00", "#ff8000",
-        ].forEach((c) => {
-            let cc = tinycolor(c).toHexString();
-            ca.push(cc);
-
-            let button = document.createElement('span');
-            button.innerHTML = cc;
-            button.style.background = cc;
-            button.addEventListener('click', (e) => {
-                colorPicker.Color = e.target.innerHTML;
-            });
-
-            colors.appendChild(button);
-        });
-
-        function rainbowEvent(obj) {
-            var top = obj.y - $(selRainbow).outerHeight() / 2 + "px";
-
-            $(selRainbow).css({
-                top: top,
-                background: obj.color
-            });
-        };
-
-        function gradientEvent(obj) {
-            var left = obj.x - $(selColor).outerWidth() / 2 + 2 + "px";
-            var top = obj.y - $(selColor).outerHeight() / 2 + 2 + "px";
-
-            $(selColor).css({
-                left: left,
-                top: top,
-                background: obj.color
-            });
-
-            color.value = obj.color;
-
-            // console.log(obj.color);
-
-            if (ca.indexOf(obj.color) === -1) {
-                ca.push(obj.color);
-
-                let button = document.createElement('span');
-                button.innerHTML = obj.color;
-                button.style.background = obj.color;
-                button.addEventListener('click', (e) => {
-                    colorPicker.Color = e.target.innerHTML;
-                });
-
-                colors.appendChild(button);
-            }
-        };
-
-        let color = document.getElementById("color");
-
-        color.addEventListener('change', () => {
-            colorPicker.Color = color.value;
-        });
-
-        let colorPicker = new colorex({
-            rainbow: rainbow,
-            gradient: gradient,
-            rainbowEvent: rainbowEvent,
-            gradientEvent: gradientEvent
-        });
-
-        colorPicker.Color = '#ff0000';//'#FFC107';
-    </script>
+    <script src="./index.js" type="module"></script>
 </body>
 
 </html>

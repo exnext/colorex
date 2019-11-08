@@ -1,15 +1,17 @@
-
+import colorConvert from './colorConvert.js';
 
 function colorex(config) {
     var gradientDetail = undefined;
     var rainbowDetail = undefined;
-    var rainbowColors = ["red", "fuchsia", "blue", "cyan", "lime", "yellow", "red"];
+    
+    const rainbowColors = ["red", "fuchsia", "blue", "cyan", "lime", "yellow", "red"];
+    Object.freeze(rainbowColors);
 
     function drawRainbowPicker(element) {
         var ctx = element.getContext("2d");
         var grd = ctx.createLinearGradient(0, 0, 0, element.height);
 
-        for (var x = 0; x < rainbowColors.length; x++) {
+        for (let x = 0; x < rainbowColors.length; x++) {
             grd.addColorStop(x / (rainbowColors.length - 1), rainbowColors[x]);
         }
 
@@ -39,14 +41,20 @@ function colorex(config) {
             if (!rainbowDetail.color) {
                 var ctx = rainbowDetail.element.getContext("2d");
                 var rgba = ctx.getImageData(rainbowDetail.x, rainbowDetail.y, 1, 1).data;
-                var tc = tinycolor({ r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] });
-                rainbowDetail.color = tc.toHexString();
+                rainbowDetail.color = colorConvert({ r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] }).hex();
             }
 
             drawGradientPicker(config.gradient, rainbowDetail.color);
 
-            if (config.rainbowEvent)
+            var selRainbow = document.getElementById('selRainbow');
+            var top = rainbowDetail.y - selRainbow.offsetHeight / 2 + "px";
+
+            selRainbow.style.top = top;
+            selRainbow.style.background = rainbowDetail.color;
+
+            if (config.rainbowEvent) {
                 config.rainbowEvent(rainbowDetail);
+            }
 
             setColor();
         }
@@ -60,8 +68,9 @@ function colorex(config) {
             color: undefined
         };
 
-        if (gradientDetail)
+        if (gradientDetail) {
             gradientDetail.color = undefined;
+        }
 
         setGradient();
     };
@@ -71,12 +80,20 @@ function colorex(config) {
             if (!gradientDetail.color) {
                 var ctx = gradientDetail.element.getContext("2d");
                 var rgba = ctx.getImageData(gradientDetail.x, gradientDetail.y, 1, 1).data;
-                var tc = tinycolor({ r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] });
-                gradientDetail.color = tc.toHexString();
+                gradientDetail.color = colorConvert({ r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] }).hex();
             }
 
-            if (config.gradientEvent)
+            var selColor = document.getElementById('selColor');
+            var left = gradientDetail.x - selColor.offsetWidth / 2 + 2 + "px";
+            var top = gradientDetail.y - selColor.offsetHeight / 2 + 2 + "px";
+
+            selColor.style.left = left;
+            selColor.style.top = top;
+            selColor.style.background = gradientDetail.color;
+
+            if (config.gradientEvent) {
                 config.gradientEvent(gradientDetail);
+            }
         }
     };
 
@@ -92,8 +109,7 @@ function colorex(config) {
     }
 
     function getSortedRgb(color) {
-        var tc = tinycolor(color);
-        var rgb = tc.toRgb();
+        var rgb = colorConvert(color).rgba();
         var sorted = [];
 
         Object.keys(rgb)
@@ -124,12 +140,11 @@ function colorex(config) {
         rgb[sorted.mid.key] = 255 * (sorted.mid.value - sorted.low.value) / (sorted.high.value - sorted.low.value) || 0;
         rgb[sorted.low.key] = 0;
 
-        var tc = tinycolor(rgb);
-        return tc.toHexString();
+        return colorConvert(rgb).hex();
     }
 
     function calcRgbBit(color) {
-        var rgb = tinycolor(color).toRgb();
+        var rgb = colorConvert(color).rgba();
 
         return {
             bit_r: (rgb.r & 128) >> 7,
@@ -138,6 +153,45 @@ function colorex(config) {
             bit_rgb: ((rgb.r & 128) >> 5) + ((rgb.g & 128) >> 6) + ((rgb.b & 128) >> 7)
         };
     }
+
+    // function calcPosOnRainbow2(color) {
+    //     const w = config.rainbow.width;
+    //     const h = config.rainbow.height;
+    //     const degree = h / (rainbowColors.length - 1);
+    //     const bitR = rainbowColors.map(function (x) { return calcRgbBit(x).bit_rgb; });
+    //     const sorted = getSortedRgb(color);
+    //     const delta = degree * sorted.mid.value / 255;
+
+    //     let bit = calcRgbBit(color);
+    //     let index = bitR.indexOf(bit.bit_rgb);
+
+    //     let rgb = {};
+    //     rgb[sorted.high.key] = 255;
+    //     rgb[sorted.low.key] = 0;
+
+    //     rgb[sorted.mid.key] = 255;
+    //     let indirectColor = colorConvert(rgb).hex();
+    //     let indirectSorted = calcRgbBit(rgb); 
+    //     let indirectIndex = bitR.indexOf(indirectSorted.bit_rgb);
+
+    //     rgb[sorted.mid.key] = 0;
+    //     let baseColor = colorConvert(rgb).hex();
+    //     let baseSorted = calcRgbBit(rgb);
+    //     let baseIndex = bitR.indexOf(baseSorted.bit_rgb);
+
+    //     if (color !== baseColor && color !== indirectColor) {
+    //         // index = indirectColor;
+
+    //         // if (baseIndex > indirectIndex) {
+    //         //     delta = -delta;
+    //         // }
+    //     }
+
+    //     return {
+    //         y: degree * index + delta,
+    //         x: w / 2
+    //     };
+    // }
 
     function calcPosOnRainbow(color) {
         const w = config.rainbow.width;
@@ -154,43 +208,38 @@ function colorex(config) {
         rgb[sorted.low.key] = 0;
 
         rgb[sorted.mid.key] = 0;
-        let baseColor = tinycolor(rgb).toHexString();
+        let baseColor = colorConvert(rgb).hex();
         let baseSorted = calcRgbBit(rgb);
         let baseIndex = bitR.indexOf(baseSorted.bit_rgb);
 
         rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255;
-        let calcColor = tinycolor(rgb).toHexString();
+        let calcColor = colorConvert(rgb).hex();
         let calcSorted = calcRgbBit(rgb);
         let calcIndex = bitR.indexOf(calcSorted.bit_rgb);
 
         rgb[sorted.mid.key] = 255;
-        let indirectColor = tinycolor(rgb).toHexString();
-        let indirectSorted = calcRgbBit(rgb); 
+        let indirectColor = colorConvert(rgb).hex();
+        let indirectSorted = calcRgbBit(rgb);
         let indirectIndex = bitR.indexOf(indirectSorted.bit_rgb);
 
         console.log({ baseIndex, index, indirectIndex, baseColor, color, calcColor, indirectColor });
         let delta = 0;
         rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255;
-        
+
         if (baseIndex > index) {
             delta = degree * (rgb[sorted.mid.key] - sorted.mid.value) / 255;
-            console.log(index + ' mniejszy ' + baseIndex);
         } else if (baseIndex < index) {
             delta = - (degree * (sorted.mid.value - rgb[sorted.mid.key]) / 255);
-            console.log(index + ' większy ' + baseIndex);
         } else {
             delta = degree * (sorted.mid.value - rgb[sorted.mid.key]) / 255;
         }
 
         if (calcColor == indirectColor && sorted.mid.value > 127 && sorted.mid.value < 255 && index - baseIndex === 1
-            || calcColor == baseColor && sorted.mid.value && sorted.mid.value < 128 && index > indirectIndex
-        ) {
-            // index--;
+            || calcColor == baseColor && sorted.mid.value && sorted.mid.value < 128 && index > indirectIndex) {
             delta = -delta;
-            console.log('korekta');
         } else if (calcColor == baseColor && sorted.mid.value && sorted.mid.value < 128 && index === 0 && indirectIndex === 5) {
             index = indirectIndex;
-            delta = degree-delta;
+            delta = degree - delta;
         }
 
         return {
@@ -198,61 +247,6 @@ function colorex(config) {
             x: w / 2
         };
     }
-
-    // var degree = h / (rainbowColors.length- 1);//-1
-    // var sorted = getSortedRgb(color);
-    // // var delta = 0;//degree * sorted.mid.value / 255;
-
-
-    // let sorted = getSortedRgb(color);
-    // let rgb = {};
-    // rgb[sorted.high.key] = 255;
-    // rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255; 
-    // rgb[sorted.low.key] = 0;  
-    // let neighborSorted = calcRgbBit(rgb);
-    // let neighborIndex = bitR.indexOf(neighborSorted.bit_rgb);
-
-    // // delta = degree * (sorted.mid.value - rgb[sorted.mid.key]) / 255;
-
-    // // if (neighborIndex > index) {
-    // //     delta = degree - delta;
-    // // }
-
-    // // if (sorted.mid.value > rgb[sorted.mid.key]) {
-    // //     delta = degree - delta;
-    // // }
-
-    // // var baseColor = getBaseColor(color);
-    // // var baseSorted = getSortedRgb(baseColor);
-
-    // // var degree = h / (rainbowColors.length - 1);
-    // // var sorted = getSortedRgb(color);
-    // // // var delta = 0;//degree * sorted.mid.value / baseSorted.mid.value;
-
-    // // var rgb = {};
-    // // rgb[sorted.high.key] = 255;
-    // // rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255; 
-    // // rgb[sorted.low.key] = 0;
-
-    // // var delta = 0;// degree * (baseSorted.mid.value - sorted.mid.value) / 255;
-
-    // // var rgb = {};
-    // // rgb[sorted.high.key] = 255; 
-    // // // rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255; 
-    // // rgb[sorted.mid.key] = 255; 
-    // // rgb[sorted.low.key] = 0;
-    // // var bitDirection = calcRgbBit(rgb);
-    // // var indexDirection = bitR.indexOf(bitDirection.bit_rgb);
-
-    // // if (indexDirection === index) {
-    // //     delta = delta - degree;
-    // // }
-
-    // // if (indexDirection === index) {
-    // //     delta = delta;
-    // // } else if (indexDirection > index) {
-    // //     delta = -delta;
-    // // }
 
     function calcPosOnGradient(color) {
         var w = config.gradient.width;
@@ -271,9 +265,8 @@ function colorex(config) {
             return gradientDetail.color;
         },
         set: function (value) {
-            var baseColor = getBaseColor(value);
-
-            var posR = calcPosOnRainbow(baseColor);//baseColor value
+            let baseColor = getBaseColor(value);
+            let posR = calcPosOnRainbow(baseColor);
 
             rainbowDetail = {
                 element: config.rainbow,
@@ -282,12 +275,19 @@ function colorex(config) {
                 color: baseColor
             };
 
-            if (config.rainbowEvent)
+            var selRainbow = document.getElementById('selRainbow');
+            var top = rainbowDetail.y - selRainbow.offsetHeight / 2 + "px";
+
+            selRainbow.style.top = top;
+            selRainbow.style.background = rainbowDetail.color;
+
+            if (config.rainbowEvent) {
                 config.rainbowEvent(rainbowDetail);
+            }
 
             drawGradientPicker(config.gradient, baseColor);
 
-            var posG = calcPosOnGradient(value);
+            let posG = calcPosOnGradient(value);
 
             gradientDetail = {
                 element: config.gradient,
@@ -305,5 +305,7 @@ function colorex(config) {
 
     drawRainbowPicker(config.rainbow);
 
-    this.Color = config.color || "green";
+    this.Color = config.color || "red";
 };
+
+export default colorex;
