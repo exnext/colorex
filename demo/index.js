@@ -35,8 +35,8 @@ document.getElementById("color").addEventListener('change', (e) => {
 });
 
 let colorPicker = new colorex({
-    rainbow: document.getElementById("cpRainbow"),
-    gradient: document.getElementById("cpGradient"),
+    picker: '#picker',
+    horizontal: false,
     onChange: (result) => {
         document.getElementById("color").value = result.color;
         addButtonColor(result.color);

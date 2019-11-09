@@ -1,15 +1,78 @@
 import colorConvert from './colorConvert.js';
 
+function createPickerElement(picker, horizontal) {
+    if (!picker) {
+        throw new Error('Picker field is required');
+    }
+
+    let main = getElement(picker);
+    main.classList.add('colorex');
+    if (horizontal) {
+        main.classList.add('horizontal');
+    }
+
+    let mr, mg;
+
+    if (main) {
+        mg = document.createElement('div');
+        mr = document.createElement('div');
+    } else if (picker.rainbow && picker.gradient) {
+        mg = getElement(picker.gradient);
+        mr = getElement(picker.rainbow);
+    } else {
+        throw new Error('Picker field is incorrect');
+    }
+
+    let gradient = document.createElement('canvas');
+    let rainbow = document.createElement('canvas');
+    let sg = document.createElement('div');
+    let sr = document.createElement('div');
+    
+    mg.classList.add('gradient');
+    mr.classList.add('rainbow');
+    sg.classList.add('selector');
+    sr.classList.add('selector');
+
+    mg.append(gradient, sg);
+    mr.append(rainbow, sr);
+    main.append(mg, mr);
+
+    gradient.width = mg.clientWidth;
+    gradient.height = mg.clientHeight;
+    rainbow.width = mr.clientWidth;
+    rainbow.height = mr.clientHeight;
+
+    function getElement(value) {
+        if (typeof value === 'string') {
+            return document.querySelector(value);
+        } else if (value instanceof Element) {
+            return value;
+        }
+
+        return null;
+    }
+
+    return { rainbow, gradient, sr, sg };
+}
+
 function colorex(config) {
+    let { rainbow, gradient, sr, sg } = createPickerElement(config.picker, config.horizontal);
+
     var gradientDetail = undefined;
     var rainbowDetail = undefined;
-    
+
     const rainbowColors = ["red", "fuchsia", "blue", "cyan", "lime", "yellow", "red"];
     Object.freeze(rainbowColors);
 
     function drawRainbowPicker(element) {
-        var ctx = element.getContext("2d");
-        var grd = ctx.createLinearGradient(0, 0, 0, element.height);
+        let ctx = element.getContext("2d");
+        let grd;
+        
+        if (config.horizontal) {
+            grd = ctx.createLinearGradient(0, 0, element.width, 0);
+        } else {
+            grd = ctx.createLinearGradient(0, 0, 0, element.height);
+        }
 
         for (let x = 0; x < rainbowColors.length; x++) {
             grd.addColorStop(x / (rainbowColors.length - 1), rainbowColors[x]);
@@ -44,13 +107,14 @@ function colorex(config) {
                 rainbowDetail.color = colorConvert({ r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] }).hex(false);
             }
 
-            drawGradientPicker(config.gradient, rainbowDetail.color);
+            drawGradientPicker(gradient, rainbowDetail.color);
 
-            var selRainbow = document.getElementById('selRainbow');
-            var top = rainbowDetail.y - selRainbow.offsetHeight / 2 + "px";
-
-            selRainbow.style.top = top;
-            selRainbow.style.background = rainbowDetail.color;
+            if (config.horizontal) {
+                sr.style.left = rainbowDetail.x + "px";
+            } else {
+                sr.style.top = rainbowDetail.y + "px";
+            }
+            sr.style.background = rainbowDetail.color;
 
             setColor();
         }
@@ -79,13 +143,11 @@ function colorex(config) {
                 gradientDetail.color = colorConvert({ r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] }).hex(false);
             }
 
-            var selColor = document.getElementById('selColor');
-            var left = gradientDetail.x - selColor.offsetWidth / 2 + 2 + "px";
-            var top = gradientDetail.y - selColor.offsetHeight / 2 + 2 + "px";
-
-            selColor.style.left = left;
-            selColor.style.top = top;
-            selColor.style.background = gradientDetail.color;
+            var left = gradientDetail.x + "px";
+            var top = gradientDetail.y + "px";
+            sg.style.left = left;
+            sg.style.top = top;
+            sg.style.background = gradientDetail.color;
 
             if (config.onChange) {
                 config.onChange(gradientDetail);
@@ -186,9 +248,9 @@ function colorex(config) {
     // }
 
     function calcPosOnRainbow(color) {
-        const w = config.rainbow.width;
-        const h = config.rainbow.height;
-        const degree = h / (rainbowColors.length - 1);
+        const w = rainbow.width;
+        const h = rainbow.height;
+        const degree = config.horizontal ? w / (rainbowColors.length - 1) : h / (rainbowColors.length - 1);
         const bitR = rainbowColors.map((x) => calcRgbBit(x).bit_rgb);
         const sorted = getSortedRgb(color);
 
@@ -233,15 +295,22 @@ function colorex(config) {
             delta = degree - delta;
         }
 
-        return {
-            y: degree * index + delta,
-            x: w / 2
-        };
+        if (config.horizontal) {
+            return {
+                y: h,
+                x: degree * index + delta
+            };
+        } else {
+            return {
+                y: degree * index + delta,
+                x: w
+            };
+        }
     }
 
     function calcPosOnGradient(color) {
-        let w = config.gradient.width;
-        let h = config.gradient.height;
+        let w = gradient.width;
+        let h = gradient.height;
         let sorted = getSortedRgb(color);
 
         return {
@@ -263,18 +332,19 @@ function colorex(config) {
                 color: baseColor
             };
 
-            var selRainbow = document.getElementById('selRainbow');
-            var top = rainbowDetail.y - selRainbow.offsetHeight / 2 + "px";
+            if (config.horizontal) {
+                sr.style.left = rainbowDetail.x + "px";
+            } else {
+                sr.style.top = rainbowDetail.y + "px";
+            }
+            sr.style.background = rainbowDetail.color;
 
-            selRainbow.style.top = top;
-            selRainbow.style.background = rainbowDetail.color;
-
-            drawGradientPicker(config.gradient, baseColor);
+            drawGradientPicker(gradient, baseColor);
 
             let posG = calcPosOnGradient(value);
 
             gradientDetail = {
-                element: config.gradient,
+                element: gradient,
                 x: posG.x,
                 y: posG.y,
                 color: value
@@ -284,10 +354,10 @@ function colorex(config) {
         }
     });
 
-    config.rainbow.addEventListener("click", rainbowClick, false);
-    config.gradient.addEventListener("click", gradientClick, false);
+    rainbow.addEventListener("click", rainbowClick, false);
+    gradient.addEventListener("click", gradientClick, false);
 
-    drawRainbowPicker(config.rainbow);
+    drawRainbowPicker(rainbow);
 
     this.Color = config.color || "red";
 };
