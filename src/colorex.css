@@ -1,30 +1,3 @@
-.color_picker {
-    position: relative;
-    white-space: nowrap;
-}
-
-.color_picker canvas {
-    margin: 0px 5px;
-}
-
-.sel_color {
-    width: 24px;
-    height: 24px;
-    border: 2px solid white;
-    position: absolute;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
-}
-
-.sel_rainbow {
-    width: 31px;
-    height: 10px;
-    left: 418px;
-    border: 2px solid white;
-    position: absolute;
-    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
-}
-
 :root {
     --selector-position: absolute;
     --selector-border: 2px solid white;
@@ -44,16 +17,16 @@
     border: 2px solid lightgrey;
 }
 
-.colorex .gradient {
-    width: 400px;
-    height: 400px;
-}
-
 .colorex .selector {
     position: var(--selector-position);
     border: var(--selector-border);
     box-shadow: var(--selector-box-shadow);
     transition: left 0.2s ease, top 0.2s ease;
+}
+
+.colorex .gradient {
+    width: 400px;
+    height: 400px;
 }
 
 .colorex .gradient .selector {
@@ -63,25 +36,29 @@
     transform: translate(-50%, -50%);
 }
 
-.colorex:not(.horizontal) .rainbow {
+.colorex:not(.horizontal) .rainbow,
+.colorex:not(.horizontal) .alpha {
     width: 40px;
     height: 400px;
     margin-left: 15px;
 }
 
-.colorex.horizontal .rainbow {
+.colorex.horizontal .rainbow,
+.colorex.horizontal .alpha {
     width: 400px;
     height: 40px;
     margin-top: 15px;
 }
 
-.colorex:not(.horizontal) .rainbow .selector {
+.colorex:not(.horizontal) .rainbow .selector,
+.colorex:not(.horizontal) .alpha .selector {
     width: calc(100% + 4px);
     height: 14px;
     transform: translate(-4px, -50%);
 }
 
-.colorex.horizontal .rainbow .selector {
+.colorex.horizontal .rainbow .selector,
+.colorex.horizontal .rainbow .alpha {
     height: calc(100% + 4px);
     width: 14px;
     top: 0;

@@ -37,6 +37,7 @@ document.getElementById("color").addEventListener('change', (e) => {
 let colorPicker = new colorex({
     picker: '#picker',
     horizontal: false,
+    alphablend: true,
     onChange: (result) => {
         document.getElementById("color").value = result.color;
         addButtonColor(result.color);
