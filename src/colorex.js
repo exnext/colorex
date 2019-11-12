@@ -33,7 +33,7 @@ function createPickerElement({ picker, horizontal, alphablend }) {
     let rainbow = document.createElement('canvas');
     let sg = document.createElement('div');
     let sr = document.createElement('div');
-    
+
     mg.classList.add('gradient');
     mr.classList.add('rainbow');
     sg.classList.add('selector');
@@ -43,7 +43,7 @@ function createPickerElement({ picker, horizontal, alphablend }) {
     if (ma) {
         alpha = document.createElement('canvas');
         sa = document.createElement('div');
-        
+
         ma.classList.add('alpha');
         sa.classList.add('selector');
 
@@ -62,7 +62,7 @@ function createPickerElement({ picker, horizontal, alphablend }) {
     if (alpha && ma) {
         main.append(ma);
         alpha.width = ma.clientWidth;
-        alpha.height = ma.clientHeight; 
+        alpha.height = ma.clientHeight;
     }
 
     function getElement(value) {
@@ -90,7 +90,7 @@ function colorex(config) {
     function drawRainbowPicker(element) {
         let ctx = element.getContext("2d");
         let grd;
-        
+
         if (config.horizontal) {
             grd = ctx.createLinearGradient(0, 0, element.width, 0);
         } else {
@@ -122,12 +122,67 @@ function colorex(config) {
         ctx.fillRect(0, 0, element.width, element.height);
     };
 
+    function alphaBackground(element) {
+        return new Promise((resolve) => {
+            let bg = document.createElement('canvas');
+            bg.width = config.horizontal ? element.height : element.width;
+            bg.height = bg.width;
+
+            let bgCtx = bg.getContext("2d");
+            bgCtx.fillStyle = 'white';
+            bgCtx.fillRect(0, 0, bg.width, bg.height);
+            bgCtx.fillStyle = 'lightgray';
+            bgCtx.fillRect(0, 0, bg.width / 2, bg.width / 2);
+            bgCtx.fillRect(bg.width / 2, bg.width / 2, bg.width / 2, bg.width / 2);
+
+            let image = new Image;
+            image.onload = (event) => resolve(event.target);
+            image.src = bg.toDataURL("image/png");
+            element.style.background = 'url(' + bg.toDataURL("image/png") +')';
+        });
+    }
+
+    function drawAlphaPicker(element, color) {
+        alphaBackground(element).then((image) => {
+            let ctx = element.getContext("2d");
+            ctx.clearRect(0, 0, element.width, element.height);
+            // let temp = 0;
+            
+            // if (config.horizontal) {
+            //     while (temp < element.width) {
+            //         ctx.drawImage(image, temp, 0);
+            //         temp += element.height;
+            //     }
+            // } else {
+            //     while (temp < element.height) {
+            //         ctx.drawImage(image, 0, temp);
+            //         temp += element.width;
+            //     }
+            // }
+
+            let grdAlpha;
+
+            if (config.horizontal) {
+                grdAlpha = ctx.createLinearGradient(0, 0, element.width, 0);
+                grdAlpha.addColorStop(0, color);
+                grdAlpha.addColorStop(1, "transparent");
+            } else {
+                grdAlpha = ctx.createLinearGradient(0, element.height, 0, 0);
+                grdAlpha.addColorStop(0, "transparent");
+                grdAlpha.addColorStop(1, color);
+            }
+
+            ctx.fillStyle = grdAlpha;
+            ctx.fillRect(0, 0, element.width, element.height);
+        });
+    }
+
     function setGradient() {
         if (rainbowDetail) {
             if (!rainbowDetail.color) {
                 var ctx = rainbowDetail.element.getContext("2d");
                 var rgba = ctx.getImageData(rainbowDetail.x, rainbowDetail.y, 1, 1).data;
-                rainbowDetail.color = colorConvert({ r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] }).hex(false);
+                rainbowDetail.color = colorConvert({ r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] }).hex(config.horizontal);
             }
 
             drawGradientPicker(gradient, rainbowDetail.color);
@@ -158,12 +213,16 @@ function colorex(config) {
         setGradient();
     };
 
+    function alphaClick(event) {
+
+    }
+
     function setColor() {
         if (gradientDetail) {
             if (!gradientDetail.color) {
                 var ctx = gradientDetail.element.getContext("2d");
                 var rgba = ctx.getImageData(gradientDetail.x, gradientDetail.y, 1, 1).data;
-                gradientDetail.color = colorConvert({ r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] }).hex(false);
+                gradientDetail.color = colorConvert({ r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] }).hex(config.horizontal);
             }
 
             var left = gradientDetail.x + "px";
@@ -171,6 +230,8 @@ function colorex(config) {
             sg.style.left = left;
             sg.style.top = top;
             sg.style.background = gradientDetail.color;
+
+            drawAlphaPicker(alpha, gradientDetail.color);
 
             if (config.onChange) {
                 config.onChange(gradientDetail);
@@ -217,7 +278,7 @@ function colorex(config) {
         rgb[sorted.mid.key] = 255 * (sorted.mid.value - sorted.low.value) / (sorted.high.value - sorted.low.value) || 0;
         rgb[sorted.low.key] = 0;
 
-        return colorConvert(rgb).hex(false);
+        return colorConvert(rgb).hex(config.horizontal);
     }
 
     function calcRgbBit(color) {
@@ -247,12 +308,12 @@ function colorex(config) {
     //     rgb[sorted.low.key] = 0;
 
     //     rgb[sorted.mid.key] = 255;
-    //     let indirectColor = colorConvert(rgb).hex(false);
+    //     let indirectColor = colorConvert(rgb).hex(config.horizontal);
     //     let indirectSorted = calcRgbBit(rgb); 
     //     let indirectIndex = bitR.indexOf(indirectSorted.bit_rgb);
 
     //     rgb[sorted.mid.key] = 0;
-    //     let baseColor = colorConvert(rgb).hex(false);
+    //     let baseColor = colorConvert(rgb).hex(config.horizontal);
     //     let baseSorted = calcRgbBit(rgb);
     //     let baseIndex = bitR.indexOf(baseSorted.bit_rgb);
 
@@ -285,17 +346,17 @@ function colorex(config) {
         rgb[sorted.low.key] = 0;
 
         rgb[sorted.mid.key] = 0;
-        let baseColor = colorConvert(rgb).hex(false);
+        let baseColor = colorConvert(rgb).hex(config.horizontal);
         let baseSorted = calcRgbBit(rgb);
         let baseIndex = bitR.indexOf(baseSorted.bit_rgb);
 
         rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255;
-        let calcColor = colorConvert(rgb).hex(false);
+        let calcColor = colorConvert(rgb).hex(config.horizontal);
         let calcSorted = calcRgbBit(rgb);
         let calcIndex = bitR.indexOf(calcSorted.bit_rgb);
 
         rgb[sorted.mid.key] = 255;
-        let indirectColor = colorConvert(rgb).hex(false);
+        let indirectColor = colorConvert(rgb).hex(config.horizontal);
         let indirectSorted = calcRgbBit(rgb);
         let indirectIndex = bitR.indexOf(indirectSorted.bit_rgb);
 
@@ -379,6 +440,7 @@ function colorex(config) {
 
     rainbow.addEventListener("click", rainbowClick, false);
     gradient.addEventListener("click", gradientClick, false);
+    alpha.addEventListener("click", alphaClick, false);
 
     drawRainbowPicker(rainbow);
 

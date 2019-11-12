@@ -58,7 +58,7 @@
 }
 
 .colorex.horizontal .rainbow .selector,
-.colorex.horizontal .rainbow .alpha {
+.colorex.horizontal .alpha .selector {
     height: calc(100% + 4px);
     width: 14px;
     top: 0;
