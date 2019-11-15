@@ -23,24 +23,20 @@ function colorConvert(color) {
 
     Object.keys(_rgba).forEach((key) => _rgba[key] = Math.floor(_rgba[key]));
 
-    function red(r) {
-        _rgba.r = r & 255 || _rgba.r;
+    function red() {
         return _rgba.r;
     }
 
-    function green(g) {
-        _rgba.g = g & 255 || _rgba.g;
+    function green() {
         return _rgba.g;
     }
 
-    function blue(b) {
-        _rgba.b = b & 255 || _rgba.b;
+    function blue() {
         return _rgba.b;
     }
     
-    function alpha(a) {
-        _rgba.a = a & 255 || _rgba.a;
-        return _rgba.a;
+    function alpha() {
+        return _rgba.a || 255;
     }
 
     function rgb() {
@@ -60,13 +56,13 @@ function colorConvert(color) {
         }
     }
 
-    function hex(alpha = true) {
+    function hex(withAlpha = true) {
         let color = '#' +
             _rgba.r.toString(16).padStart(2, '0') +
             _rgba.g.toString(16).padStart(2, '0') +
             _rgba.b.toString(16).padStart(2, '0');
 
-        if (alpha) {
+        if (withAlpha) {
             color += (_rgba.a || 255).toString(16).padStart(2, '0');
         }
 
