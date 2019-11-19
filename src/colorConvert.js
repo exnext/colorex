@@ -1,17 +1,64 @@
 import { colorArray } from './colorNames.js';
 
 function colorConvert(color) {
-    let _rgba = color;
-    
+    let _rgba;
+
+    const reColors = [
+        {
+            re: /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/,
+            color: (value) => {
+                let temp = value.slice(1, value.length);
+                let result = temp.match(/.{1,2}/g);
+
+                let alpha = parseInt(result[3], 16);
+                if (isNaN(alpha)) {
+                    alpha = 255;
+                }
+
+                return {
+                    r: parseInt(result[0], 16),
+                    g: parseInt(result[1], 16),
+                    b: parseInt(result[2], 16),
+                    a: alpha
+                }
+            }
+        },
+        {
+            re: /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/,
+            color: (value) => {
+                let result = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/.exec(value).slice(1);
+
+                let alpha = parseInt(parseFloat(result[3]) * 255);
+                if (isNaN(alpha)) {
+                    alpha = 255;
+                }
+
+                return {
+                    r: parseInt(result[0]),
+                    g: parseInt(result[1]),
+                    b: parseInt(result[2]),
+                    a: alpha
+                }
+            }
+        }
+    ];
+
     if (typeof color === 'string') {
-        _rgba = (() => {
+        for (let rec of reColors) {
+            if (rec.re.test(color)) {
+                _rgba = rec.color(color);
+                break;
+            }
+        }
+
+        _rgba = _rgba || (() => {
             let ctx = document.createElement('canvas').getContext('2d');
-            ctx.beginPath();
             ctx.rect(0, 0, 1, 1);
+            ctx.clearRect(0, 0, 1, 1);
             ctx.fillStyle = color;
             ctx.fill();
             let pixel = ctx.getImageData(0, 0, 1, 1);
-    
+
             return {
                 r: pixel.data[0],
                 g: pixel.data[1],
@@ -19,9 +66,11 @@ function colorConvert(color) {
                 a: pixel.data[3]
             }
         })();
+    } else {
+        _rgba = Object.assign({ r: 0, g: 0, b: 0, a: 255 }, color);
     }
 
-    Object.keys(_rgba).forEach((key) => _rgba[key] = Math.floor(_rgba[key]));
+    Object.keys(_rgba).forEach((key) => _rgba[key] = Math.round(_rgba[key]));
 
     function red() {
         return _rgba.r;
@@ -34,7 +83,7 @@ function colorConvert(color) {
     function blue() {
         return _rgba.b;
     }
-    
+
     function alpha() {
         return _rgba.a || 255;
     }
@@ -74,7 +123,7 @@ function colorConvert(color) {
         return color ? color.value : hex();
     }
 
-    function bits() {      
+    function bits() {
         return {
             bit_r: (_rgba.r & 128) >> 7,
             bit_g: (_rgba.g & 128) >> 7,
@@ -126,7 +175,6 @@ function colorConvert(color) {
 
         return colorConvert(rgb).hex();
     }
-
 
     return {
         red,

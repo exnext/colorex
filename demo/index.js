@@ -10,6 +10,7 @@ const testColors = [
     '#00ff00', '#3fff00', '#7fff00', '#80ff00', '#cfff00',
     '#ffff00', '#ffcf00', '#ff8000', '#ff7f00', '#ff3f00'
 ]
+const alphablend = true;
 
 function addButtonColor(color) {
     if (buttonColors.indexOf(color) === -1) {
@@ -27,7 +28,7 @@ function addButtonColor(color) {
 }
 
 testColors.forEach((color) => {
-    addButtonColor(colorConvert(color).hex(false));
+    addButtonColor(colorConvert(color).hex(alphablend));
 });
 
 document.getElementById("color").addEventListener('change', (e) => {
@@ -37,7 +38,7 @@ document.getElementById("color").addEventListener('change', (e) => {
 let colorPicker = new colorex({
     picker: '#picker',
     // horizontal: true,
-    alphablend: true,
+    alphablend: alphablend,
     onChange: (result) => {
         document.getElementById("color").value = result.color;
         addButtonColor(result.color);

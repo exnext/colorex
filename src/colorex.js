@@ -1,6 +1,5 @@
 import colorConvert from './colorConvert.js';
 import createPickerElement from './pickerConstructor.js';
-// import './colorex.css';
 
 function colorex(config) {
     let { rainbow, gradient, alpha, sr, sg, sa } = createPickerElement(config);
@@ -195,9 +194,9 @@ function colorex(config) {
     function getAlphaValue() {
         if (alphaDetail) {
             if (config.horizontal) {
-                return 255 * alphaDetail.x / alpha.width; 
+                return Math.round(255 - 255 * alphaDetail.x / alpha.width); 
             } else {
-                return 255 * alphaDetail.y / alpha.height;
+                return Math.round(255 - 255 * alphaDetail.y / alpha.height);
             }
         } else {
             return 255;
@@ -242,7 +241,7 @@ function colorex(config) {
         let delta = 0;
         rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255;
 
-        //todo: change
+        //todo: must be changed
         if (base.index > index) {
             delta = degree * (rgb[sorted.mid.key] - sorted.mid.value) / 255;
         } else if (base.index < index) {

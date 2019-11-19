@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Webpack Server",
+            "name": "Launch demo",
             "program": "${workspaceFolder}/node_modules/webpack-dev-server/bin/webpack-dev-server.js",
             "args": [
                 "--open"

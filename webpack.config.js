@@ -27,8 +27,10 @@ module.exports = {
             })
         ]
     },
-    plugins: [
+    plugins: this.mode === 'production' ? [
         new CleanWebpackPlugin(),
+        new MiniCssExtractPlugin()
+    ] : [
         new MiniCssExtractPlugin()
     ],
     module: {
