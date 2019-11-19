@@ -1,24 +1,65 @@
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const TerserJSPlugin = require("terser-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
+
 module.exports = {
-    entry: './src/colorex.js',
+    entry: {
+        'colorex.js': './src/colorex.js',
+        'colorex.min.js': './src/colorex.js',
+        'colorex': './src/colorex.css',
+        'colorex.min': './src/colorex.css',
+    },
     output: {
-        path: `${__dirname}/dist/`,
-        filename: 'colorex.js'
+        path: path.resolve(__dirname, 'dist'),
+        filename: '[name]'
     },
     watch: false,
-    mode: "development", //ta opcja zostanie pominięta jeżeli użyjemy npm run build
-    devtool: "source-map",
+    mode: "development",
+    optimization: {
+        minimizer: [
+            new TerserJSPlugin({
+                include: /\.min\.js$/
+              }),
+            new OptimizeCSSAssetsPlugin({
+                assetNameRegExp: /\.min\.css$/
+            })
+        ]
+    },
+    plugins: [
+        new CleanWebpackPlugin(),
+        new MiniCssExtractPlugin()
+    ],
     module: {
         rules: [
             {
-                test: /\.m?js$/,
-                exclude: /(node_modules|bower_components)/,
+                test: /\.js$/,
+                exclude: /(node_modules)/,
                 use: {
                     loader: 'babel-loader',
                     options: {
                         presets: ['@babel/preset-env']
                     }
                 }
+            },
+            {
+                test: /\.css$/,
+                exclude: /(node_modules)/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader
+                    },
+                    'css-loader'
+                ]
             }
         ]
+    },
+    devServer: {
+        contentBase: path.resolve(__dirname, ''),
+        // compress: true,
+        port: 8080,
+        publicPath: '/',
+        openPage: '/demo'
     }
 }

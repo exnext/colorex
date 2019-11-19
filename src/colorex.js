@@ -1,5 +1,6 @@
 import colorConvert from './colorConvert.js';
 import createPickerElement from './pickerConstructor.js';
+// import './colorex.css';
 
 function colorex(config) {
     let { rainbow, gradient, alpha, sr, sg, sa } = createPickerElement(config);
