@@ -23,24 +23,26 @@ function colorConvert(color) {
                 }
             }
         },
-        {
-            re: /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/,
-            color: (value) => {
-                let result = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/.exec(value).slice(1);
+        //todo: must be changed
+        //
+        // {
+        //     re: /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/,
+        //     color: (value) => {
+        //         let result = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/.exec(value).slice(1);
 
-                let alpha = parseInt(parseFloat(result[3]) * 255);
-                if (isNaN(alpha)) {
-                    alpha = 255;
-                }
+        //         let alpha = parseInt(parseFloat(result[3]) * 255);
+        //         if (isNaN(alpha)) {
+        //             alpha = 255;
+        //         }
 
-                return {
-                    r: parseInt(result[0]),
-                    g: parseInt(result[1]),
-                    b: parseInt(result[2]),
-                    a: alpha
-                }
-            }
-        }
+        //         return {
+        //             r: parseInt(result[0]),
+        //             g: parseInt(result[1]),
+        //             b: parseInt(result[2]),
+        //             a: alpha
+        //         }
+        //     }
+        // }
     ];
 
     if (typeof color === 'string') {
