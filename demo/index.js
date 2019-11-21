@@ -36,7 +36,8 @@ document.getElementById("color").addEventListener('change', (e) => {
 });
 
 let colorPicker = new colorex({
-    picker: '#picker',
+    // picker: '#picker',
+    picker: document.getElementById("picker"),
     // horizontal: true,
     alphablend: alphablend,
     onChange: (result) => {

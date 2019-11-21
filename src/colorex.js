@@ -1,5 +1,6 @@
 import colorConvert from './colorConvert.js';
 import createPickerElement from './pickerConstructor.js';
+import asModule from './asModule.js';
 
 function colorex(config) {
     let { rainbow, gradient, alpha, sr, sg, sa } = createPickerElement(config);
@@ -344,5 +345,7 @@ function colorex(config) {
 
     this.color = config.color || "red";
 };
+
+asModule(colorex, 'colorex');
 
 export default colorex;

@@ -81,12 +81,74 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */,
+/* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {function asModule(value) {
+  // Node: Export function
+  if ( true && module.exports) {
+    module.exports = value;
+  } // AMD/requirejs: Define the module
+  else if (typeof define === 'function' && __webpack_require__(2)) {
+      define(function () {
+        return value;
+      });
+    } // Browser: Expose to window
+    else {
+        window[name] = value;
+      }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (asModule);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)(module)))
+
+/***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+module.exports = function(originalModule) {
+	if (!originalModule.webpackPolyfill) {
+		var module = Object.create(originalModule);
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		Object.defineProperty(module, "exports", {
+			enumerable: true
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
+module.exports = __webpack_amd_options__;
+
+/* WEBPACK VAR INJECTION */}.call(this, {}))
+
+/***/ }),
+/* 3 */,
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -560,7 +622,11 @@ function createPickerElement(_ref) {
 }
 
 /* harmony default export */ var pickerConstructor = (createPickerElement);
+// EXTERNAL MODULE: ./src/asModule.js
+var asModule = __webpack_require__(0);
+
 // CONCATENATED MODULE: ./src/colorex.js
+
 
 
 
@@ -921,6 +987,7 @@ function colorex(config) {
 }
 
 ;
+Object(asModule["a" /* default */])(colorex, 'colorex');
 /* harmony default export */ var src_colorex = __webpack_exports__["default"] = (colorex);
 
 /***/ })
