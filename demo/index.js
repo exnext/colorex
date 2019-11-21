@@ -12,6 +12,8 @@ const testColors = [
 ]
 const alphablend = true;
 
+const colorPickers = [];
+
 function addButtonColor(color) {
     if (buttonColors.indexOf(color) === -1) {
         buttonColors.push(color);
@@ -20,7 +22,9 @@ function addButtonColor(color) {
         button.innerHTML = color;
         button.style.background = color;
         button.addEventListener('click', (e) => {
-            colorPicker.color = e.target.innerHTML;
+            colorPickers.forEach(function (colorPicker) {
+                colorPicker.color = e.target.innerHTML;
+            });
         });
 
         document.getElementById("colors").appendChild(button);
@@ -32,18 +36,80 @@ testColors.forEach((color) => {
 });
 
 document.getElementById("color").addEventListener('change', (e) => {
-    colorPicker.color = e.target.value;
+    colorPickers.forEach(function (colorPicker) {
+        colorPicker.color = e.target.value;
+    });
 });
 
-let colorPicker = new colorex({
-    // picker: '#picker',
-    picker: document.getElementById("picker"),
-    // horizontal: true,
+
+colorPickers.push(new colorex({
+    picker: '#picker1',
+    alphablend: alphablend,
+    color: '#E70000',
+    onChange: (result) => {
+        document.getElementById("color").value = result.color;
+        addButtonColor(result.color);
+    }
+}));
+
+
+colorPickers.push(new colorex({
+    picker: document.getElementById("picker2"),
+    alphablend: !alphablend,
+    color: '#FF8C00',
+    onChange: (result) => {
+        document.getElementById("color").value = result.color;
+        addButtonColor(result.color);
+    }
+}));
+
+
+colorPickers.push(new colorex({
+    picker: '#picker3',
+    horizontal: true,
     alphablend: alphablend,
     onChange: (result) => {
         document.getElementById("color").value = result.color;
         addButtonColor(result.color);
     }
-});
+}));
 
-colorPicker.color = '#FFC107';
+colorPickers[colorPickers.length - 1].color = '#FFEF00';
+
+
+colorPickers.push(new colorex({
+    picker: document.getElementById("picker4"),
+    horizontal: true,
+    alphablend: !alphablend,
+    onChange: (result) => {
+        document.getElementById("color").value = result.color;
+        addButtonColor(result.color);
+    }
+}));
+
+colorPickers[colorPickers.length - 1].color = '#00811F';
+
+
+colorPickers.push(new colorex({
+    picker: '.picker5',
+    horizontal: false,
+    alphablend: alphablend,
+    onChange: (result) => {
+        document.getElementById("color").value = result.color;
+        addButtonColor(result.color);
+    }
+}));
+
+colorPickers[colorPickers.length - 1].color = '#0044FF';
+
+
+colorPickers.push(new colorex({
+    picker: '#picker6',
+    horizontal: false,
+    alphablend: !alphablend,
+    color: '#760089',
+    onChange: (result) => {
+        document.getElementById("color").value = result.color;
+        addButtonColor(result.color);
+    }
+}));

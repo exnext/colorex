@@ -1,7 +1,14 @@
 :root {
+    --element-border: 2px solid lightgrey;
     --selector-position: absolute;
     --selector-border: 2px solid white;
     --selector-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
+    --space-between: 15px;
+    --gradient-selector-size: 30px;
+    --gradient-size: 300px;
+    --picker-selector-size: 14px;
+    --picker-size: 40px;
+    --alpha-background: #eeeeee;
 }
 
 .colorex {
@@ -14,7 +21,7 @@
 
 .colorex > * {
     position: relative;
-    border: 2px solid lightgrey;
+    border: var(--element-border);
 }
 
 .colorex .selector {
@@ -22,57 +29,53 @@
     border: var(--selector-border);
     box-shadow: var(--selector-box-shadow);
     transition: left 0.2s ease, top 0.2s ease;
+    z-index: 1;
 }
 
 .colorex .gradient {
-    width: 400px;
-    height: 400px;
+    width: var(--gradient-size);
+    height: var(--gradient-size);
 }
 
-.colorex.horizontal .gradient {
-    margin: 15px 0px;
+.colorex.horizontal > *:not(:first-child) {
+    margin-top: var(--space-between);
 }
 
-.colorex:not(.horizontal) .gradient {
-    margin: 0px 15px;
+.colorex:not(.horizontal) > *:not(:first-child) {
+    margin-left: var(--space-between);
 }
 
 .colorex .gradient .selector {
-    width: 30px;
-    height: 30px;
+    width: var(--gradient-selector-size);
+    height: var(--gradient-selector-size);
     border-radius: 50%;
     transform: translate(-50%, -50%);
+    z-index: 2;
 }
 
 .colorex:not(.horizontal) .rainbow,
 .colorex:not(.horizontal) .alpha {
-    width: 40px;
-    height: 400px;
-    /* margin-left: 15px; */
+    width: var(--picker-size);
+    height: var(--gradient-size);
 }
 
 .colorex.horizontal .rainbow,
 .colorex.horizontal .alpha {
-    width: 400px;
-    height: 40px;
-    /* margin-top: 15px; */
+    width: var(--gradient-size);
+    height: var(--picker-size);
 }
 
 .colorex:not(.horizontal) .rainbow .selector,
 .colorex:not(.horizontal) .alpha .selector {
     width: calc(100% + 4px);
-    height: 14px;
+    height: var(--picker-selector-size);
     transform: translate(-4px, -50%);
 }
 
 .colorex.horizontal .rainbow .selector,
 .colorex.horizontal .alpha .selector {
     height: calc(100% + 4px);
-    width: 14px;
+    width: var(--picker-selector-size);
     top: 0;
     transform: translate(-50%, -4px);
-}
-
-.alpha canvas {
-    --alpha-background: lightgrey;
 }

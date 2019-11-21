@@ -9,3 +9,88 @@ button {
 input {
     margin: 5px;
 }
+
+.pickers {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.picker {
+    margin: 25px;
+}
+
+#picker4 .rainbow .selector,
+#picker4 .alpha .selector {
+    height: calc(100% + 2px) !important;
+}
+
+#picker4 > * {
+    border-width: 1px;
+}
+
+.picker5 {
+    --gradient-size: 250px;
+    --picker-size: 30px;
+    --alpha-background: pink;
+    --selector-border: 2px solid black;
+}
+
+.picker5 .rainbow .selector,
+.picker5 .alpha .selector {
+    width: 100% !important;
+    transform: translate(0, -50%) !important;
+    border: none;
+    box-shadow: none;
+    background: transparent !important;
+}
+
+.picker5 > * {
+    border-color: black;
+}
+
+.picker5 .rainbow,
+.picker5 .alpha {
+    overflow: hidden;
+}
+
+.picker5 .rainbow .selector:after,
+.picker5 .alpha .selector:after {
+    content: '';
+    width: 0; 
+    height: 0; 
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    
+    border-left: 10px solid black;
+    
+    position: absolute;
+    left: 0px;
+    transform: translateY(-50%);
+    top: 50%;
+}
+  
+.picker5 .rainbow .selector:before,
+.picker5 .alpha .selector:before {
+    content: '';
+    width: 0; 
+    height: 0; 
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent; 
+    
+    border-right:10px solid black; 
+    
+    position: absolute;
+    right: 0px;
+    transform: translateY(-50%);
+    top: 50%;
+}
+
+#picker6 {
+    --gradient-size: 200px;
+    --picker-size: 20px;
+}
+
+#picker6 .gradient .selector {
+    border-radius: 0px;
+}
