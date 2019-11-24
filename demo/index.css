@@ -16,7 +16,7 @@ input {
     flex-wrap: wrap;
 }
 
-.color-picker {
+.picker {
     margin: 25px;
 }
 
@@ -33,10 +33,7 @@ input {
     --gradient-size: 250px;
     --picker-size: 30px;
     --alpha-background: pink;
-}
-
-.picker5 .gradient .selector {
-    border: 2px solid black;
+    --selector-border: 2px solid black;
 }
 
 .picker5 .rainbow .selector,
@@ -48,7 +45,7 @@ input {
     background: transparent !important;
 }
 
-.picker5 .picker {
+.picker5 > * {
     border-color: black;
 }
 
@@ -96,18 +93,4 @@ input {
 
 #picker6 .gradient .selector {
     border-radius: 0px;
-}
-
-#picker7 {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
-
-#picker7 > *:not(.alphablend) {
-    display: flex;
-}
-
-#picker7 * {
-    /* border: 1px solid red; */
 }

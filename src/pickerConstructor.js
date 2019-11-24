@@ -3,20 +3,19 @@ function createPickerElement({ picker, horizontal, alphablend }) {
         throw new Error('Picker field is required');
     }
 
-    let mr, mg, ma;
     let main = getElement(picker);
+    main.classList.add('colorex');
+    if (horizontal) {
+        main.classList.add('horizontal');
+    }
+
+    let mr, mg, ma;
 
     if (main) {
-        main.classList.add('colorex');
-       
         mg = document.createElement('div');
-        mr = document.createElement('div');       
+        mr = document.createElement('div');
         if (alphablend) {
             ma = document.createElement('div');
-        }
-
-        if (horizontal) {
-            main.classList.add('horizontal');
         }
     } else if (picker.rainbow && picker.gradient) {
         mg = getElement(picker.gradient);
@@ -26,20 +25,6 @@ function createPickerElement({ picker, horizontal, alphablend }) {
         }
     } else {
         throw new Error('Picker field is incorrect');
-    }
-
-    mg.classList.add('picker');
-    mr.classList.add('picker');
-    if (ma) {
-        ma.classList.add('picker');
-    }
-
-    if (horizontal) {       
-        mg.classList.add('horizontal');
-        mr.classList.add('horizontal');
-        if (ma) {
-            ma.classList.add('horizontal');
-        }
     }
 
     let gradient = document.createElement('canvas');
@@ -65,19 +50,7 @@ function createPickerElement({ picker, horizontal, alphablend }) {
 
     mg.append(gradient, sg);
     mr.append(rainbow, sr);
-    
-    if (main) {
-        main.append(mr, mg);
-        if (ma) {
-            main.append(ma);
-        }
-    } else {
-        mr.parentElement.classList.add('colorex');
-        mg.parentElement.classList.add('colorex');
-        if (ma) {
-            ma.parentElement.classList.add('colorex');
-        }
-    }
+    main.append(mr, mg);
 
     gradient.width = mg.clientWidth;
     gradient.height = mg.clientHeight;
@@ -85,6 +58,7 @@ function createPickerElement({ picker, horizontal, alphablend }) {
     rainbow.height = mr.clientHeight;
 
     if (alpha && ma) {
+        main.append(ma);
         alpha.width = ma.clientWidth;
         alpha.height = ma.clientHeight;
     }

@@ -19,14 +19,6 @@ function colorex(config) {
 
     drawRainbowPicker(rainbow);
 
-    function isHorizontal({ horizontal }, picker) {
-        if (typeof horizontal === 'boolean') {
-            return horizontal;
-        } else {
-            return horizontal && !!horizontal[picker];
-        }
-    }
-
     function drawAlphaPickerBackground(element) {
         if (!element) {
             return;
@@ -35,7 +27,7 @@ function colorex(config) {
         let alphaBackground = getComputedStyle(element).getPropertyValue('--alpha-background');
 
         let bg = document.createElement('canvas');
-        bg.width = isHorizontal(config, 'alphablend') ? element.height : element.width;
+        bg.width = config.horizontal ? element.height : element.width;
         bg.height = bg.width;
 
         let bgCtx = bg.getContext("2d");
@@ -53,7 +45,7 @@ function colorex(config) {
         let ctx = element.getContext("2d");
         let grd;
 
-        if (isHorizontal(config, 'rainbow')) {
+        if (config.horizontal) {
             grd = ctx.createLinearGradient(0, 0, element.width, 0);
         } else {
             grd = ctx.createLinearGradient(0, 0, 0, element.height);
@@ -90,7 +82,7 @@ function colorex(config) {
 
         let grdAlpha;
 
-        if (isHorizontal(config, 'alphablend')) {
+        if (config.horizontal) {
             grdAlpha = ctx.createLinearGradient(0, 0, element.width, 0);
         } else {
             grdAlpha = ctx.createLinearGradient(0, element.height, 0, 0);
@@ -154,7 +146,7 @@ function colorex(config) {
 
             drawGradientPicker(gradient, rainbowDetail.color);
 
-            if (isHorizontal(config, 'rainbow')) {
+            if (config.horizontal) {
                 sr.style.left = rainbowDetail.x + "px";
             } else {
                 sr.style.top = rainbowDetail.y + "px";
@@ -191,7 +183,7 @@ function colorex(config) {
 
     function setAlpha() {
         if (alphaDetail) {
-            if (isHorizontal(config, 'alphablend')) {
+            if (config.horizontal) {
                 sa.style.left = alphaDetail.x + "px";
             } else {
                 sa.style.top = alphaDetail.y + "px";
@@ -201,7 +193,7 @@ function colorex(config) {
 
     function getAlphaValue() {
         if (alphaDetail) {
-            if (isHorizontal(config, 'alphablend')) {
+            if (config.horizontal) {
                 return Math.round(255 - 255 * alphaDetail.x / alpha.width); 
             } else {
                 return Math.round(255 - 255 * alphaDetail.y / alpha.height);
@@ -216,7 +208,7 @@ function colorex(config) {
         const h = rainbow.height;
 
         let { degree, sorted, index, getMeasurement } = (() => {
-            const degree = isHorizontal(config, 'rainbow') ? w / (rainbowColors.length - 1) : h / (rainbowColors.length - 1);
+            const degree = config.horizontal ? w / (rainbowColors.length - 1) : h / (rainbowColors.length - 1);
             const bitR = rainbowColors.map((x) => colorConvert(x).bits().bit_rgb);
             const sorted = colorConvert(color).levels();
             const bit = colorConvert(color).bits();
@@ -266,7 +258,7 @@ function colorex(config) {
             delta = degree - delta;
         }
 
-        if (isHorizontal(config, 'rainbow')) {
+        if (config.horizontal) {
             return {
                 y: h,
                 x: degree * index + delta
@@ -295,7 +287,7 @@ function colorex(config) {
         let h = alpha.height;
         let alphaValue = colorConvert(color).alpha();
 
-        if (isHorizontal(config, 'alphablend')) {
+        if (config.horizontal) {
             return {
                 y: h,
                 x: w * alphaValue / 255

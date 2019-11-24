@@ -13,7 +13,7 @@
     flex-direction: column;
 }
 
-.colorex .picker {
+.colorex > * {
     position: relative;
     border: var(--border-width) solid lightgrey;
 }
@@ -31,11 +31,11 @@
     height: var(--gradient-size);
 }
 
-.colorex > *.horizontal:not(:first-child) {
+.colorex.horizontal > *:not(:first-child) {
     margin-top: var(--space-between);
 }
 
-.colorex > *:not(.horizontal):not(:first-child) {
+.colorex:not(.horizontal) > *:not(:first-child) {
     margin-left: var(--space-between);
 }
 
@@ -59,15 +59,15 @@
     height: var(--picker-size);
 }
 
-.colorex .rainbow:not(.horizontal) .selector,
-.colorex .alpha:not(.horizontal) .selector {
+.colorex:not(.horizontal) .rainbow .selector,
+.colorex:not(.horizontal) .alpha .selector {
     width: calc(100% + var(--border-width) + var(--border-width));
     height: var(--picker-selector-size);
     transform: translate(calc(0px - var(--border-width) - var(--border-width)), -50%);
 }
 
-.colorex .rainbow.horizontal .selector,
-.colorex .alpha.horizontal .selector {
+.colorex.horizontal .rainbow .selector,
+.colorex.horizontal .alpha .selector {
     height: calc(100% + var(--border-width) + var(--border-width));
     width: var(--picker-selector-size);
     top: 0;
