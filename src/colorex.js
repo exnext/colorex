@@ -84,13 +84,12 @@ function colorex(config) {
 
         if (config.horizontal) {
             grdAlpha = ctx.createLinearGradient(0, 0, element.width, 0);
-            grdAlpha.addColorStop(0, "transparent");
-            grdAlpha.addColorStop(1, color);
         } else {
             grdAlpha = ctx.createLinearGradient(0, element.height, 0, 0);
-            grdAlpha.addColorStop(0, "transparent");
-            grdAlpha.addColorStop(1, color);
         }
+
+        grdAlpha.addColorStop(0, "transparent");
+        grdAlpha.addColorStop(1, color);
 
         ctx.fillStyle = grdAlpha;
         ctx.fillRect(0, 0, element.width, element.height);
@@ -347,5 +346,12 @@ function colorex(config) {
 };
 
 asModule(colorex, 'colorex');
+
+
+function colorex2(config) {
+
+}
+
+asModule(colorex2, 'colorex2');
 
 export default colorex;
