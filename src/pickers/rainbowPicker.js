@@ -2,8 +2,8 @@ import { picker1D } from './basePicker.js';
 import colorConvert from '../colorConvert.js';
 
 class rainbowPicker extends picker1D {
-    constructor({ element, horizontal, click }) {
-        super({ element, click });
+    constructor(config) {
+        super(config);
 
         this.draw();
     }

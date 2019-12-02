@@ -1,6 +1,6 @@
 import colorConvert from '../colorConvert.js';
 
-let basePicker = (() => {
+let picker = (() => {
     const _color = Symbol('color');
     const _point = Symbol('point');
     
@@ -64,6 +64,7 @@ let basePicker = (() => {
         }
     
         setSelectorPosition(point) {
+            this[_point] = { x: point.x, y: point.y };
             let color = this.pointColor(point);
             this.selector.style.background = color;
         }
@@ -101,12 +102,7 @@ let basePicker = (() => {
 
 
 
-class picker1D extends basePicker {
-    constructor(config) {
-        super(config);
-        this.horizontal = config.horizontal;
-    }
-
+class picker1D extends picker {
     setSelectorPosition(point) {
         super.setSelectorPosition(point);
 
@@ -116,13 +112,13 @@ class picker1D extends basePicker {
             this.selector.style.top = point.y + "px";
         }
     }
+
+    get horizontal() {
+        return this.element.classList.contains('horizontal');
+    }
 }
 
-class picker2D extends basePicker {
-    constructor(config) {
-        super(config);
-    }
-
+class picker2D extends picker {
     setSelectorPosition(point) {
         super.setSelectorPosition(point);
         

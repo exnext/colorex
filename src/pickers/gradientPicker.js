@@ -2,10 +2,6 @@ import { picker2D } from './basePicker.js';
 import colorConvert from '../colorConvert.js';
 
 class gradientPicker extends picker2D {
-    constructor({ element, click }) {
-        super({ element, click });
-    }
-
     draw(value) {
         const ctx = super.draw(value);
         const { width, height } = this.size();

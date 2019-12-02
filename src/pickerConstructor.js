@@ -76,7 +76,7 @@ function createPickerElement({ picker, horizontal, alphablend }) {
     return { rainbow, gradient, alpha, sr, sg, sa };
 }
 
-function createPickerElement2({ picker, alphablend } = {}) {
+function createPickerElement2({ picker, alphablend, horizontal } = {}) {
     if (!picker) {
         throw new Error('Picker field is required');
     }
@@ -108,6 +108,14 @@ function createPickerElement2({ picker, alphablend } = {}) {
     rainbow.classList.add('rainbow');
     if (alpha) {
         alpha.classList.add('alpha');
+    }
+
+    if (horizontal) {
+        main.classList.add('horizontal');
+        rainbow.classList.add('horizontal');
+        if (alpha) {
+            alpha.classList.add('horizontal');
+        }        
     }
 
     function getElement(value) {

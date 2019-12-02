@@ -126,3 +126,14 @@ colorPickers.push(new colorex2({
         addButtonColor(result.color);
     }
 }));
+
+colorPickers.push(new colorex2({
+    picker: '#picker8',
+    horizontal: true,
+    alphablend: true,
+    color: '#760089',
+    onChange: (result) => {
+        document.getElementById("color").value = result.color;
+        addButtonColor(result.color);
+    }
+}));

@@ -2,14 +2,14 @@ import { picker1D } from './basePicker.js';
 import colorConvert from '../colorConvert.js';
 
 class alphaPicker extends picker1D {
-    constructor({ element, horizontal, click }) {
-        super({ element, click });
+    constructor(config) {
+        super(config);
 
         (() => {
-            const alphaBackground = getComputedStyle(element).getPropertyValue('--alpha-background');
+            const alphaBackground = getComputedStyle(this.element).getPropertyValue('--alpha-background');
     
             const bg = document.createElement('canvas');
-            bg.width = horizontal ? this.canvas.height : this.canvas.width;
+            bg.width = this.horizontal ? this.canvas.height : this.canvas.width;
             bg.height = bg.width;
     
             const ctx = bg.getContext("2d");
@@ -31,7 +31,7 @@ class alphaPicker extends picker1D {
         color = colorConvert(color).hex(false);
         
         let clg = this.horizontal ?
-            ctx.createLinearGradient(0, 0, width, 0) :
+            ctx.createLinearGradient(width, 0, 0, 0) :
             ctx.createLinearGradient(0, height, 0, 0)
         clg.addColorStop(0, "transparent");
         clg.addColorStop(1, color);
@@ -46,11 +46,11 @@ class alphaPicker extends picker1D {
         if (this.horizontal) {
             return {
                 y: height,
-                x: width * alphaValue / 255
+                x: Math.round(width - width * alphaValue / 255)
             };
         } else {
             return {
-                y: height - height * alphaValue / 255,
+                y: Math.round(height - height * alphaValue / 255),
                 x: width
             };
         }
