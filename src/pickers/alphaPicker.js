@@ -6,7 +6,7 @@ class alphaPicker extends picker1D {
         super(config);
 
         (() => {
-            const alphaBackground = getComputedStyle(this.element).getPropertyValue('--alpha-background');
+            const alphaBackground = getComputedStyle(this.canvas).getPropertyValue('background-color');
     
             const bg = document.createElement('canvas');
             bg.width = this.horizontal ? this.canvas.height : this.canvas.width;

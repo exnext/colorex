@@ -130,6 +130,7 @@ colorPickers.push(new colorex2({
 colorPickers.push(new colorex2({
     picker: '#picker8',
     horizontal: true,
+    // horizontal: { rainbow: false, alpha: true },
     alphablend: true,
     color: '#760089',
     onChange: (result) => {

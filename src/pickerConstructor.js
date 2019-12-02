@@ -110,12 +110,11 @@ function createPickerElement2({ picker, alphablend, horizontal } = {}) {
         alpha.classList.add('alpha');
     }
 
-    if (horizontal) {
-        main.classList.add('horizontal');
-        rainbow.classList.add('horizontal');
-        if (alpha) {
-            alpha.classList.add('horizontal');
-        }        
+    let horizontalOrientation = getHorizontal(horizontal);
+    main.classList.toggle('horizontal', horizontalOrientation.main);
+    rainbow.classList.toggle('horizontal', horizontalOrientation.rainbow);
+    if (alpha) {
+        alpha.classList.toggle('horizontal', horizontalOrientation.alpha);
     }
 
     function getElement(value) {
@@ -126,6 +125,27 @@ function createPickerElement2({ picker, alphablend, horizontal } = {}) {
         }
 
         return null;
+    }
+
+    function getHorizontal(horizontal) {
+        let result = {
+            main: false,
+            rainbow: false,
+            alpha: false
+        }
+
+        if (typeof horizontal === 'boolean') {
+            result = {
+                main: horizontal,
+                rainbow: horizontal,
+                alpha: horizontal
+            }
+        } else {
+            result = Object.assign(result, horizontal);
+            result.main = result.rainbow && result.alpha;
+        }
+
+        return result;
     }
 
     return { rainbow, gradient, alpha };
