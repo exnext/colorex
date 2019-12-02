@@ -33,11 +33,11 @@ let basePicker = (() => {
                     y: event.offsetY
                 };
     
-                this.setSelectorPosition(this.point);
-    
-                let color = this.pointColor(this.point);
-    
-                click(this.point, color);
+                this.setSelectorPosition(this[_point]);
+                let color = this.pointColor(this[_point]);
+                this.setColor(color);
+                
+                click(this[_point], color);
             }, false);
         }
 
@@ -81,20 +81,20 @@ let basePicker = (() => {
         setColor(value) {
             this[_color] = value;
             this.draw(this[_color]);
-            
-            // let color = this.pointColor(this.point);
-            this.selector.style.background = this.pointColor(this.point); 
+            this.selector.style.background = this.pointColor(this[_point]); 
         }
 
-        get point() { return this[_point]; }
+        get point() {
+            return this[_point];
+        }
     
         get color() { return this[_color]; }
         set color(value) {
             this[_color] = value;
             this.setColor(value);
 
-            // let point = this.position(value);
-            // this.setSelectorPosition(point);
+            let point = this.position(value);
+            this.setSelectorPosition(point);
         }
     }
 })();

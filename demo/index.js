@@ -118,7 +118,7 @@ colorPickers.push(new colorex({
 
 colorPickers.push(new colorex2({
     picker: '#picker7',
-    // horizontal: false,
+    // horizontal: true,
     alphablend: true,
     color: '#760089',
     onChange: (result) => {

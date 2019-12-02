@@ -93,28 +93,18 @@ class rainbowPicker extends picker1D {
                 x: width
             };
         }
-    }
-
-    // setSelectorPosition(point) {
-    //     super.setSelectorPosition(point);
-    //     let color = this.pointColor(point);
-    //     this.selector.style.background = color;
-    // }
+    }  
 
     get color() {
         return super.color;
     }
     set color(value) {
         let color = colorConvert(value).hex(false);
-        let baseColor = colorConvert(color).sourceColor();
-        baseColor = colorConvert(baseColor).hex(false);        
-        let point = this.position(baseColor);
-        // let color2 = this.pointColor(point);
+        color = colorConvert(color).sourceColor();
+        color = colorConvert(color).hex(false);        
+        let point = this.position(color);
         this.setSelectorPosition(point);
-        // this.selector.style.background = baseColor;
-
-        super.color = value;
-        this.selector.style.background = baseColor;
+        super.color = color;
     }
 }
 

@@ -14,7 +14,7 @@ class gradientPicker extends picker2D {
         color = colorConvert(color).sourceColor();
         color = colorConvert(color).hex(false);
 
-        const clgWhite = ctx.createLinearGradient(0, 0, this.canvas.width, 0);
+        const clgWhite = ctx.createLinearGradient(0, 0, width, 0);
         clgWhite.addColorStop(0, "white");
         clgWhite.addColorStop(1, color);
         ctx.fillStyle = clgWhite;
@@ -35,15 +35,6 @@ class gradientPicker extends picker2D {
             y: Math.min(height - height * sorted.high.value / 255, height - 1),
             x: Math.min(width - width * sorted.low.value / sorted.high.value, width - 1)
         };
-    }
-
-    get color() {
-        return super.color;
-    }
-    set color(value) {
-        super.color = value;
-        let point = this.position(value);
-        this.setSelectorPosition(point);
     }
 }
 

@@ -359,10 +359,8 @@ function colorex2(config) {
         element: rainbow,
         horizontal: config.horizontal,
         click: (point, color) => {
-            // gp.color = color;
             gp.setColor(color);
             if (ap) {
-                // ap.color = color;
                 ap.setColor(color);
             }
             
@@ -376,7 +374,6 @@ function colorex2(config) {
         element: gradient,
         click: (point, color) => {
             if (ap) {
-                // ap.color = color;
                 ap.setColor(color);
             }
 
@@ -403,7 +400,7 @@ function colorex2(config) {
             let rgb = colorConvert(gp.color).rgb();
             
             if (ap) {
-                rgb.a = ap.alpha;
+                rgb.a = ap.alphaValue();
             }
 
             return colorConvert(rgb).hex(!!ap);

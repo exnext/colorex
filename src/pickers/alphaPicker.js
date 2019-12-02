@@ -56,14 +56,6 @@ class alphaPicker extends picker1D {
         }
     }
 
-    setSelectorPosition(point) {
-        if (this.horizontal) {
-            this.selector.style.left = point.x + "px";
-        } else {
-            this.selector.style.top = point.y + "px";
-        }
-    }
-
     pointColor(point) {
         return this.color;
     }
@@ -73,13 +65,13 @@ class alphaPicker extends picker1D {
         super.setColor(colorConvert(color).hex(false));
     }
 
-    get color() {
-        return super.color;
-    }
-    set color(value) {
-        super.color = value;
-        let point = this.position(value);
-        this.setSelectorPosition(point);
+    alphaValue() {
+        const { width, height } = this.size();
+        if (this.horizontal) {
+            return Math.round(255 - 255 * this.point.x / width);
+        } else {
+            return Math.round(255 - 255 * this.point.y / height);
+        }
     }
 }
 
