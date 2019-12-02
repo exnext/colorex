@@ -12,7 +12,7 @@ class rainbowPicker extends picker1D {
         return ["red", "fuchsia", "blue", "cyan", "lime", "yellow", "red"];
     }
 
-    draw() {
+    draw(value) {
         const ctx = super.draw();
         const { width, height } = this.size();
         
@@ -101,6 +101,9 @@ class rainbowPicker extends picker1D {
     //     this.selector.style.background = color;
     // }
 
+    get color() {
+        return super.color;
+    }
     set color(value) {
         let color = colorConvert(value).hex(false);
         let baseColor = colorConvert(color).sourceColor();

@@ -6,9 +6,13 @@ class gradientPicker extends picker2D {
         super({ element, click });
     }
 
-    draw(color) {
-        const ctx = super.draw(color);
+    draw(value) {
+        const ctx = super.draw(value);
         const { width, height } = this.size();
+
+        let color = colorConvert(value).hex(false);
+        color = colorConvert(color).sourceColor();
+        color = colorConvert(color).hex(false);
 
         const clgWhite = ctx.createLinearGradient(0, 0, this.canvas.width, 0);
         clgWhite.addColorStop(0, "white");
@@ -39,29 +43,32 @@ class gradientPicker extends picker2D {
     //     this.selector.style.background = color;
     // }
 
-    setColor(value) {
-        super.setColor(value);
-        let color = this.pointColor(this.point);
-        this.selector.style.background = color;
-    }
-
-    // get color() {
-    //     return super.color;
+    // setColor(value) {
+    //     super.setColor(value);
+    //     let color = this.pointColor(this.point);
+    //     this.selector.style.background = color;
     // }
-    set color(value) {
-        let color = colorConvert(value).hex(false);
-        let baseColor = colorConvert(color).sourceColor();
-        baseColor = colorConvert(baseColor).hex(false);
-        // this.draw(baseColor);
 
+    get color() {
+        return super.color;
+    }
+    set color(value) {
+        super.color = value;
         let point = this.position(value);
         this.setSelectorPosition(point);
+        // let color = colorConvert(value).hex(false);
+        // let baseColor = colorConvert(color).sourceColor();
+        // baseColor = colorConvert(baseColor).hex(false);
+        // this.draw(baseColor);
+
+        // let point = this.position(value);
+        // this.setSelectorPosition(point);
 
 
-        super.color = value;
-        this.draw(baseColor);
-        this.setColor(value);
-        this.draw(baseColor);
+        // super.color = value;
+        // this.draw(baseColor);
+        // this.setColor(value);
+        // this.draw(baseColor);
     }
 }
 

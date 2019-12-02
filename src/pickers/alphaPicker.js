@@ -23,10 +23,13 @@ class alphaPicker extends picker1D {
         })();
     }
 
-    draw(color) {
-        const ctx = super.draw(color);
+    draw(value) {
+        const ctx = super.draw(value);
         const { width, height } = this.size();
 
+        let color = colorConvert(value).rgb();
+        color = colorConvert(color).hex(false);
+        
         let clg = this.horizontal ?
             ctx.createLinearGradient(0, 0, width, 0) :
             ctx.createLinearGradient(0, height, 0, 0)
@@ -69,6 +72,10 @@ class alphaPicker extends picker1D {
         }
     }
 
+    pointColor(point) {
+        return this.color;
+    }
+
     // get alpha() {
     //     // if (alphaDetail) {
     //     //     if (this.horizontal) {
@@ -91,15 +98,21 @@ class alphaPicker extends picker1D {
     // }
 
     setColor(value) {
-        super.setColor(value);
+        let color = colorConvert(value).rgb();
+        super.setColor(colorConvert(color).hex(false));
     }
 
+    get color() {
+        return super.color;
+    }
     set color(value) {
     //     this.draw(value);
+        // let color = colorConvert(value).rgb();
+        // super.color = colorConvert(color).hex(false);
         super.color = value;
         let point = this.position(value);
         this.setSelectorPosition(point);
-        this.selector.style.background = value;
+        // this.selector.style.background = value;
 
     //     super.color = value;
     }
