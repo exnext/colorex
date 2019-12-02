@@ -92,8 +92,9 @@ let basePicker = (() => {
         set color(value) {
             this[_color] = value;
             this.setColor(value);
-            // this.baseColor = value;
-            // this.draw(this.baseColor);
+
+            // let point = this.position(value);
+            // this.setSelectorPosition(point);
         }
     }
 })();

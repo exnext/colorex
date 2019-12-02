@@ -37,18 +37,6 @@ class gradientPicker extends picker2D {
         };
     }
 
-    // setSelectorPosition(point) {
-    //     super.setSelectorPosition(point);
-    //     let color = this.pointColor(point);
-    //     this.selector.style.background = color;
-    // }
-
-    // setColor(value) {
-    //     super.setColor(value);
-    //     let color = this.pointColor(this.point);
-    //     this.selector.style.background = color;
-    // }
-
     get color() {
         return super.color;
     }
@@ -56,19 +44,6 @@ class gradientPicker extends picker2D {
         super.color = value;
         let point = this.position(value);
         this.setSelectorPosition(point);
-        // let color = colorConvert(value).hex(false);
-        // let baseColor = colorConvert(color).sourceColor();
-        // baseColor = colorConvert(baseColor).hex(false);
-        // this.draw(baseColor);
-
-        // let point = this.position(value);
-        // this.setSelectorPosition(point);
-
-
-        // super.color = value;
-        // this.draw(baseColor);
-        // this.setColor(value);
-        // this.draw(baseColor);
     }
 }
 
