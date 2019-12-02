@@ -1,4 +1,4 @@
-function asModule(value, ) {
+function modularization(value, name) {
     // Node: Export function
     if (typeof module !== "undefined" && module.exports) {
         module.exports = value;
@@ -9,8 +9,8 @@ function asModule(value, ) {
     }
     // Browser: Expose to window
     else {
-        window[name] = value;
+        window[name || value.name] = value;
     }
 }
 
-export default asModule;
+export default modularization;

@@ -1,6 +1,11 @@
 import colorConvert from './colorConvert.js';
 import createPickerElement from './pickerConstructor.js';
-import asModule from './asModule.js';
+import { createPickerElement2 } from './pickerConstructor.js';
+import modularization from './modularization.js';
+
+import gradientPicker from './pickers/gradientPicker.js';
+import rainbowPicker from './pickers/rainbowPicker.js';
+import alphaPicker from './pickers/alphaPicker.js';
 
 function colorex(config) {
     let { rainbow, gradient, alpha, sr, sg, sa } = createPickerElement(config);
@@ -345,13 +350,76 @@ function colorex(config) {
     this.color = config.color || "red";
 };
 
-asModule(colorex, 'colorex');
-
-
 function colorex2(config) {
+    let { gradient, rainbow, alpha } = createPickerElement2(config);
+    
+    let gp, rp, ap;
+    
+    rp = new rainbowPicker({ 
+        element: rainbow,
+        horizontal: config.horizontal,
+        click: (point, color) => {
+            // gp.color = color;
+            gp.setColor(color);
+            if (ap) {
+                // ap.color = color;
+                ap.setColor(color);
+            }
+            
+            if (config.onChange) {
+                config.onChange({ color: this.color });
+            }
+        }
+    });
 
+    gp = new gradientPicker({ 
+        element: gradient,
+        click: (point, color) => {
+            if (ap) {
+                // ap.color = color;
+                ap.setColor(color);
+            }
+
+            if (config.onChange) {
+                config.onChange({ color: this.color });
+            }
+        }
+    });
+    
+    if (alpha) {
+        ap = new alphaPicker({
+            element: alpha,
+            horizontal: config.horizontal,
+            click: (point, color) => {
+                if (config.onChange) {
+                    config.onChange({ color: this.color });
+                }
+            }
+        });
+    }
+
+    Object.defineProperty(this, 'color', {
+        get: () => {
+            let rgb = colorConvert(gp.color).rgb();
+            
+            if (ap) {
+                rgb.a = ap.alpha;
+            }
+
+            return colorConvert(rgb).hex(!!ap);
+        },
+        set: (value) => {
+            rp.color = value;
+            gp.color = value;
+            if (ap) {
+                ap.color = value;
+            }
+        }
+    });
+
+    this.color = config.color || "red";
 }
 
-asModule(colorex2, 'colorex2');
+modularization(colorex);
 
-export default colorex;
+export { colorex as default, colorex2 };

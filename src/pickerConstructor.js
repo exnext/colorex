@@ -76,4 +76,51 @@ function createPickerElement({ picker, horizontal, alphablend }) {
     return { rainbow, gradient, alpha, sr, sg, sa };
 }
 
-export default createPickerElement;
+function createPickerElement2({ picker, alphablend } = {}) {
+    if (!picker) {
+        throw new Error('Picker field is required');
+    }
+
+    let gradient, rainbow, alpha;
+
+    let main = getElement(picker);
+    if (main) {
+        main.classList.add('colorex');
+        
+        gradient = document.createElement('div');
+        rainbow = document.createElement('div');
+        main.append(gradient, rainbow);
+        
+        if (alphablend) {
+            alpha = document.createElement('div');
+            main.append(alpha);
+        }
+    } else {
+        gradient = getElement(picker.gradient);
+        rainbow = getElement(picker.rainbow);
+
+        if (alphablend && picker.alpha) {
+            alpha = getElement(picker.alpha);
+        }
+    }
+
+    gradient.classList.add('gradient');
+    rainbow.classList.add('rainbow');
+    if (alpha) {
+        alpha.classList.add('alpha');
+    }
+
+    function getElement(value) {
+        if (typeof value === 'string') {
+            return document.querySelector(value);
+        } else if (value instanceof Element) {
+            return value;
+        }
+
+        return null;
+    }
+
+    return { rainbow, gradient, alpha };
+}
+
+export { createPickerElement as default, createPickerElement2 };

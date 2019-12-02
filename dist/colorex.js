@@ -89,7 +89,7 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(module) {function asModule(value) {
+/* WEBPACK VAR INJECTION */(function(module) {function modularization(value, name) {
   // Node: Export function
   if ( true && module.exports) {
     module.exports = value;
@@ -100,11 +100,11 @@
       });
     } // Browser: Expose to window
     else {
-        window[name] = value;
+        window[name || value.name] = value;
       }
 }
 
-/* harmony default export */ __webpack_exports__["a"] = (asModule);
+/* harmony default export */ __webpack_exports__["a"] = (modularization);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)(module)))
 
 /***/ }),
@@ -623,10 +623,238 @@ function createPickerElement(_ref) {
 }
 
 /* harmony default export */ var pickerConstructor = (createPickerElement);
-// EXTERNAL MODULE: ./src/asModule.js
-var asModule = __webpack_require__(0);
+// EXTERNAL MODULE: ./src/modularization.js
+var modularization = __webpack_require__(0);
 
+// CONCATENATED MODULE: ./src/pickers/basePicker.js
+function basePicker(element) {
+  this.elements = elements;
+  this.size = size;
+  this.draw = draw;
+  this.click = click;
+  this.position = position;
+  var main = getPickerElement(element);
+  var canvas = document.createElement('canvas');
+  var selector = document.createElement('div');
+  main.append(canvas, selector);
+  canvas.width = main.clientWidth;
+  canvas.height = main.clientHeight;
+
+  function elements() {
+    return {
+      main: main,
+      canvas: canvas,
+      selector: selector
+    };
+  }
+
+  function size() {
+    return {
+      width: element.width,
+      height: element.height
+    };
+  }
+
+  function draw() {
+    var ctx = element.getContext("2d");
+    ctx.clearRect(0, 0, element.width, element.height);
+    return ctx;
+  }
+
+  function click(x, y) {}
+
+  function position(color) {}
+
+  function getPickerElement(value) {
+    if (typeof value === 'string') {
+      return document.querySelector(value);
+    } else if (value instanceof Element) {
+      return value;
+    }
+
+    return null;
+  }
+
+  element.addEventListener("click", function (event) {
+    click(event.offsetX, event.offsetY);
+  }, false);
+}
+
+/* harmony default export */ var pickers_basePicker = (basePicker);
+// CONCATENATED MODULE: ./src/pickers/gradientPicker.js
+
+
+
+function gradientPicker(element) {
+  pickers_basePicker.call(this, element); // this.draw = draw;
+  // this.click = click;
+  // this.position = position;
+  // function draw(color) {
+  //     const ctx = super.draw();
+  //     const clgWhite = ctx.createLinearGradient(0, 0, element.width, 0);
+  //     clgWhite.addColorStop(0, "white");
+  //     clgWhite.addColorStop(1, color);
+  //     ctx.fillStyle = clgWhite;
+  //     ctx.fillRect(0, 0, element.width, element.height);
+  //     const clgBlack = ctx.createLinearGradient(0, element.height, 0, 0);
+  //     clgBlack.addColorStop(0, "black");
+  //     clgBlack.addColorStop(1, "transparent");
+  //     ctx.fillStyle = clgBlack;
+  //     ctx.fillRect(0, 0, element.width, element.height);
+  // }
+  // function click(x, y) {
+  // }
+  // function position(color) {
+  //     const { width, height } = size();
+  //     const sorted = colorConvert(color).levels();
+  //     return {
+  //         y: Math.min(height - height * sorted.high.value / 255, height - 1),
+  //         x: Math.min(width - width * sorted.low.value / sorted.high.value, width - 1)
+  //     };
+  // }
+}
+
+gradientPicker.prototype = Object.create(pickers_basePicker.prototype);
+/* harmony default export */ var pickers_gradientPicker = (gradientPicker);
+// CONCATENATED MODULE: ./src/pickers/rainbowPicker.js
+
+
+
+function rainbowPicker(element, horizontal) {
+  pickers_basePicker.call(this, element); // this.draw = draw;
+  // this.click = click;
+  // this.position = position;
+  // const colors = ["red", "fuchsia", "blue", "cyan", "lime", "yellow", "red"];
+  // function draw() {
+  //     let ctx = super.draw();
+  //     let clg = horizontal ?
+  //         ctx.createLinearGradient(0, 0, element.width, 0) :
+  //         ctx.createLinearGradient(0, 0, 0, element.height);
+  //     for (let x = 0; x < colors.length; x++) {
+  //         clg.addColorStop(x / (colors.length - 1), colors[x]);
+  //     }
+  //     ctx.fillStyle = clg;
+  //     ctx.fillRect(0, 0, element.width, element.height);
+  // }
+  // function click(x, y) {
+  // }
+  // function position(color) {
+  //     const { width, height } = size();
+  //     let { degree, sorted, index, getMeasurement } = (() => {
+  //         const degree = horizontal ? width / (rainbowColors.length - 1) : height / (rainbowColors.length - 1);
+  //         const bitR = rainbowColors.map((x) => colorConvert(x).bits().bit_rgb);
+  //         const sorted = colorConvert(color).levels();
+  //         const bit = colorConvert(color).bits();
+  //         const index = bitR.indexOf(bit.bit_rgb);
+  //         function getMeasurement(rgb) {
+  //             let color = colorConvert(rgb).hex(config.alphablend);
+  //             let sorted = colorConvert(rgb).bits();
+  //             let index = bitR.indexOf(sorted.bit_rgb);
+  //             return { color, sorted, index }
+  //         }
+  //         return { degree, sorted, index, getMeasurement }
+  //     })();
+  //     let rgb = {};
+  //     rgb[sorted.high.key] = 255;
+  //     rgb[sorted.low.key] = 0;
+  //     rgb[sorted.mid.key] = 0;
+  //     let base = getMeasurement(rgb);
+  //     rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255;
+  //     let calc = getMeasurement(rgb);
+  //     rgb[sorted.mid.key] = 255;
+  //     let indirect = getMeasurement(rgb);
+  //     let delta = 0;
+  //     rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255;
+  //     //todo: must be changed
+  //     if (base.index > index) {
+  //         delta = degree * (rgb[sorted.mid.key] - sorted.mid.value) / 255;
+  //     } else if (base.index < index) {
+  //         delta = - (degree * (sorted.mid.value - rgb[sorted.mid.key]) / 255);
+  //     } else {
+  //         delta = degree * (sorted.mid.value - rgb[sorted.mid.key]) / 255;
+  //     }
+  //     if (calc.color == indirect.color && sorted.mid.value > 127 && sorted.mid.value < 255 && index - base.index === 1
+  //         || calc.color == base.color && sorted.mid.value && sorted.mid.value < 128 && index > indirect.index) {
+  //         delta = -delta;
+  //     } else if (calc.color == base.color && sorted.mid.value && sorted.mid.value < 128 && index === 0 && indirect.index === 5) {
+  //         index = indirect.index;
+  //         delta = degree - delta;
+  //     }
+  //     if (horizontal) {
+  //         return {
+  //             y: height,
+  //             x: degree * index + delta
+  //         };
+  //     } else {
+  //         return {
+  //             y: degree * index + delta,
+  //             x: width
+  //         };
+  //     }
+  // }
+}
+
+rainbowPicker.prototype = Object.create(pickers_basePicker.prototype);
+/* harmony default export */ var pickers_rainbowPicker = (rainbowPicker);
+// CONCATENATED MODULE: ./src/pickers/alphaPicker.js
+
+
+
+function alphaPicker(element, horizontal) {
+  pickers_basePicker.call(this, element); // this.draw = draw;
+  // this.click = click;
+  // this.position = position;
+  // drawBackground();
+  // function draw(color) {
+  //     let ctx = super.draw();
+  //     let clg = horizontal ?
+  //         ctx.createLinearGradient(0, 0, element.width, 0) :
+  //         ctx.createLinearGradient(0, element.height, 0, 0)
+  //     clg.addColorStop(0, "transparent");
+  //     clg.addColorStop(1, color);
+  //     ctx.fillStyle = clg;
+  //     ctx.fillRect(0, 0, element.width, element.height);
+  // }
+  // function click(x, y) {
+  // }
+  // function position(color) {
+  //     const { width, height } = size();
+  //     const alphaValue = colorConvert(color).alpha();
+  //     if (horizontal) {
+  //         return {
+  //             y: height,
+  //             x: width * alphaValue / 255
+  //         };
+  //     } else {
+  //         return {
+  //             y: height - height * alphaValue / 255,
+  //             x: width
+  //         };
+  //     }
+  // }
+  // function drawBackground() {
+  //     const alphaBackground = getComputedStyle(element).getPropertyValue('--alpha-background');
+  //     const bg = document.createElement('canvas');
+  //     bg.width = horizontal ?
+  //         element.height :
+  //         element.width;
+  //     bg.height = bg.width;
+  //     const ctx = bg.getContext("2d");
+  //     ctx.fillStyle = 'white';
+  //     ctx.fillRect(0, 0, bg.width, bg.height);
+  //     ctx.fillStyle = alphaBackground;
+  //     ctx.fillRect(0, 0, bg.width / 2, bg.width / 2);
+  //     ctx.fillRect(bg.width / 2, bg.width / 2, bg.width / 2, bg.width / 2);
+  //     element.style.background = 'url(' + bg.toDataURL("image/png") + ')';
+  // }
+}
+
+alphaPicker.prototype = Object.create(pickers_basePicker.prototype);
+/* harmony default export */ var pickers_alphaPicker = (alphaPicker);
 // CONCATENATED MODULE: ./src/colorex.js
+
+
+
 
 
 
@@ -717,14 +945,12 @@ function colorex(config) {
 
     if (config.horizontal) {
       grdAlpha = ctx.createLinearGradient(0, 0, element.width, 0);
-      grdAlpha.addColorStop(0, "transparent");
-      grdAlpha.addColorStop(1, color);
     } else {
       grdAlpha = ctx.createLinearGradient(0, element.height, 0, 0);
-      grdAlpha.addColorStop(0, "transparent");
-      grdAlpha.addColorStop(1, color);
     }
 
+    grdAlpha.addColorStop(0, "transparent");
+    grdAlpha.addColorStop(1, color);
     ctx.fillStyle = grdAlpha;
     ctx.fillRect(0, 0, element.width, element.height);
   }
@@ -988,8 +1214,115 @@ function colorex(config) {
 }
 
 ;
-Object(asModule["a" /* default */])(colorex, 'colorex');
+
+function colorex2(config) {
+  var _createPickerElement2 = createPickerElement2(config),
+      gradient = _createPickerElement2.gradient,
+      rainbow = _createPickerElement2.rainbow,
+      alpha = _createPickerElement2.alpha;
+
+  pickers_gradientPicker(gradient);
+  pickers_rainbowPicker(rainbow, config.horizontal);
+
+  if (alpha) {
+    pickers_alphaPicker(alpha, config.horizontal);
+  } // Object.defineProperty(this, 'color', {
+  //     get: () => {
+  //         let rgba = colorConvert(gradientDetail.color).rgb();
+  //         rgba.a = getAlphaValue(); 
+  //         return colorConvert(rgba).hex(config.alphablend);
+  //     },
+  //     set: (value) => {
+  //         let color = colorConvert(value).hex(false);
+  //         let baseColor = colorConvert(color).sourceColor();
+  //         baseColor = colorConvert(baseColor).hex(false);
+  //         let posR = calcPosOnRainbow(baseColor);
+  //         rainbowDetail = {
+  //             element: config.rainbow,
+  //             x: posR.x,
+  //             y: posR.y,
+  //             color: baseColor
+  //         };
+  //         setGradient();
+  //         let posG = calcPosOnGradient(color);
+  //         gradientDetail = {
+  //             element: gradient,
+  //             x: posG.x,
+  //             y: posG.y,
+  //             color: color
+  //         };
+  //         if (config.alphablend) {
+  //             let posA = calcPosOnAlpha(value);
+  //             alphaDetail = {
+  //                 element: this,
+  //                 x: posA.x,
+  //                 y: posA.y
+  //             };
+  //             setAlpha();
+  //         }
+  //         setColor();
+  //     }
+  // });
+  // this.color = config.color || "red";
+
+}
+
+Object(modularization["a" /* default */])(colorex);
 /* harmony default export */ var src_colorex = __webpack_exports__["default"] = (colorex);
+
+function createPickerElement2(_ref2) {
+  var picker = _ref2.picker,
+      alphablend = _ref2.alphablend;
+
+  if (!picker) {
+    throw new Error('Picker field is required');
+  }
+
+  var gradient, rainbow, alpha;
+  var main = getElement(picker);
+
+  if (main) {
+    main.classList.add('colorex');
+    gradient = document.createElement('div');
+    rainbow = document.createElement('div');
+    main.append(gradient, rainbow);
+
+    if (alphablend) {
+      alpha = document.createElement('div');
+      main.append(alpha);
+    }
+  } else {
+    gradient = getElement(picker.gradient);
+    rainbow = getElement(picker.rainbow);
+
+    if (alphablend && picker.alpha) {
+      alpha = getElement(picker.alpha);
+    }
+  }
+
+  gradient.classList.add('gradient');
+  rainbow.classList.add('rainbow');
+
+  if (alpha) {
+    alpha.classList.add('alpha');
+  }
+
+  function getElement(value) {
+    if (typeof value === 'string') {
+      return document.querySelector(value);
+    } else if (value instanceof Element) {
+      return value;
+    }
+
+    return null;
+  }
+
+  return {
+    rainbow: rainbow,
+    gradient: gradient,
+    alpha: alpha
+  };
+}
 
 /***/ })
 /******/ ]);

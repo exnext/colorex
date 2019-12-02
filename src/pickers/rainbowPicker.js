@@ -1,42 +1,45 @@
-import basePicker from './basePicker.js';
-import colorConvert from './colorConvert.js';
+import { picker1D } from './basePicker.js';
+import colorConvert from '../colorConvert.js';
 
-function rainbowPicker(element, horizontal) {
-    basePicker.call(this, element, horizontal);
+class rainbowPicker extends picker1D {
+    constructor({ element, horizontal, click }) {
+        super({ element, click });
 
-    const colors = ["red", "fuchsia", "blue", "cyan", "lime", "yellow", "red"];
+        this.draw();
+    }
 
-    function draw() {
-        let ctx = super.draw();
+    get colors() {
+        return ["red", "fuchsia", "blue", "cyan", "lime", "yellow", "red"];
+    }
+
+    draw() {
+        const ctx = super.draw();
+        const { width, height } = this.size();
         
-        let clg = horizontal ?
-            ctx.createLinearGradient(0, 0, element.width, 0) :
-            ctx.createLinearGradient(0, 0, 0, element.height);
+        let clg = this.horizontal ?
+            ctx.createLinearGradient(0, 0, width, 0) :
+            ctx.createLinearGradient(0, 0, 0, height);
 
-        for (let x = 0; x < colors.length; x++) {
-            clg.addColorStop(x / (colors.length - 1), colors[x]);
+        for (let x = 0; x < this.colors.length; x++) {
+            clg.addColorStop(x / (this.colors.length - 1), this.colors[x]);
         }
 
         ctx.fillStyle = clg;
-        ctx.fillRect(0, 0, element.width, element.height);
+        ctx.fillRect(0, 0, width, height);
     }
 
-    function click(x, y) {
-
-    }
-
-    function position(color) {
-        const { width, height } = size();
+    position(color) {
+        const { width, height } = this.size();
 
         let { degree, sorted, index, getMeasurement } = (() => {
-            const degree = horizontal ? width / (rainbowColors.length - 1) : height / (rainbowColors.length - 1);
-            const bitR = rainbowColors.map((x) => colorConvert(x).bits().bit_rgb);
+            const degree = this.horizontal ? width / (this.colors.length - 1) : height / (this.colors.length - 1);
+            const bitR = this.colors.map((x) => colorConvert(x).bits().bit_rgb);
             const sorted = colorConvert(color).levels();
             const bit = colorConvert(color).bits();
             const index = bitR.indexOf(bit.bit_rgb);
 
             function getMeasurement(rgb) {
-                let color = colorConvert(rgb).hex(config.alphablend);
+                let color = colorConvert(rgb).hex();
                 let sorted = colorConvert(rgb).bits();
                 let index = bitR.indexOf(sorted.bit_rgb);
 
@@ -79,7 +82,7 @@ function rainbowPicker(element, horizontal) {
             delta = degree - delta;
         }
 
-        if (horizontal) {
+        if (this.horizontal) {
             return {
                 y: height,
                 x: degree * index + delta
@@ -91,5 +94,25 @@ function rainbowPicker(element, horizontal) {
             };
         }
     }
+
+    // setSelectorPosition(point) {
+    //     super.setSelectorPosition(point);
+    //     let color = this.pointColor(point);
+    //     this.selector.style.background = color;
+    // }
+
+    set color(value) {
+        let color = colorConvert(value).hex(false);
+        let baseColor = colorConvert(color).sourceColor();
+        baseColor = colorConvert(baseColor).hex(false);        
+        let point = this.position(baseColor);
+        // let color2 = this.pointColor(point);
+        this.setSelectorPosition(point);
+        // this.selector.style.background = baseColor;
+
+        super.color = value;
+        this.selector.style.background = baseColor;
+    }
 }
-rainbowPicker.prototype = Object.create(basePicker.prototype);
+
+export default rainbowPicker;
