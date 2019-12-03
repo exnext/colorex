@@ -17,14 +17,6 @@
     flex-direction: row;
 }
 
-/* .colorex:not(.column) > *:not(:first-child) {
-    margin-left: var(--space-between);
-}
-
-.colorex.column > *:not(:first-child) {
-    margin-top: var(--space-between);
-} */
-
 .colorex .rainbow, .colorex .gradient, .colorex .alpha {
     position: relative;
     border: var(--border-width) solid lightgrey;
