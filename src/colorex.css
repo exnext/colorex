@@ -9,13 +9,18 @@
     display: flex;
 }
 
-.colorex.horizontal {
+.colorex.column {
     flex-direction: column;
 }
 
-.colorex > * {
+.colorex:not(.column) {
+    flex-direction: row;
+}
+
+.colorex .rainbow, .colorex .gradient, .colorex .alpha {
     position: relative;
     border: var(--border-width) solid lightgrey;
+    margin: calc(var(--space-between) / 2);
 }
 
 .colorex .selector {
@@ -31,14 +36,6 @@
     height: var(--gradient-size);
 }
 
-.colorex.horizontal > *:not(:first-child) {
-    margin-top: var(--space-between);
-}
-
-.colorex:not(.horizontal) > *:not(:first-child) {
-    margin-left: var(--space-between);
-}
-
 .colorex .gradient .selector {
     width: var(--gradient-selector-size);
     height: var(--gradient-selector-size);
@@ -47,29 +44,34 @@
     z-index: 2;
 }
 
-.colorex:not(.horizontal) .rainbow,
-.colorex:not(.horizontal) .alpha {
+
+.colorex .rainbow:not(.horizontal),
+.colorex .alpha:not(.horizontal) {
     width: var(--picker-size);
     height: var(--gradient-size);
 }
 
-.colorex.horizontal .rainbow,
-.colorex.horizontal .alpha {
+.colorex .rainbow.horizontal,
+.colorex .alpha.horizontal {
     width: var(--gradient-size);
     height: var(--picker-size);
 }
 
-.colorex:not(.horizontal) .rainbow .selector,
-.colorex:not(.horizontal) .alpha .selector {
+.colorex .rainbow:not(.horizontal) .selector,
+.colorex .alpha:not(.horizontal) .selector {
     width: calc(100% + var(--border-width) + var(--border-width));
     height: var(--picker-selector-size);
     transform: translate(calc(0px - var(--border-width) - var(--border-width)), -50%);
 }
 
-.colorex.horizontal .rainbow .selector,
-.colorex.horizontal .alpha .selector {
+.colorex .rainbow.horizontal .selector,
+.colorex .alpha.horizontal .selector {
     height: calc(100% + var(--border-width) + var(--border-width));
     width: var(--picker-selector-size);
     top: 0;
     transform: translate(-50%, calc(0px - var(--border-width) - var(--border-width)));
+}
+
+.colorex .alpha canvas {
+    background-color: var(--alpha-background);
 }

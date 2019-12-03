@@ -31,6 +31,12 @@ function addButtonColor(color) {
     }
 }
 
+function changeColor(result) {
+    document.getElementById("color").value = result.color;
+    document.getElementById("exnext").style.fill = result.color;
+    addButtonColor(result.color);
+}
+
 testColors.forEach((color) => {
     addButtonColor(colorConvert(color).hex(alphablend));
 });
@@ -45,9 +51,10 @@ document.getElementById("color").addEventListener('change', (e) => {
 colorPickers.push(new colorex({
     picker: '#picker1',
     alphablend: alphablend,
-    color: '#E70000',
+    color: '#760089',
     onChange: (result) => {
         document.getElementById("color").value = result.color;
+        document.getElementById("exnext").style.fill = result.color;
         addButtonColor(result.color);
     }
 }));
@@ -59,6 +66,7 @@ colorPickers.push(new colorex({
     color: '#FF8C00',
     onChange: (result) => {
         document.getElementById("color").value = result.color;
+        document.getElementById("exnext").style.fill = result.color;
         addButtonColor(result.color);
     }
 }));
@@ -69,11 +77,9 @@ colorPickers.push(new colorex({
     horizontal: true,
     alphablend: alphablend,
     onChange: (result) => {
-        document.getElementById("color").value = result.color;
-        addButtonColor(result.color);
+        changeColor(result);
     }
 }));
-
 colorPickers[colorPickers.length - 1].color = '#FFEF00';
 
 
@@ -81,12 +87,8 @@ colorPickers.push(new colorex({
     picker: document.getElementById("picker4"),
     horizontal: true,
     alphablend: !alphablend,
-    onChange: (result) => {
-        document.getElementById("color").value = result.color;
-        addButtonColor(result.color);
-    }
+    onChange: (result) => changeColor(result)
 }));
-
 colorPickers[colorPickers.length - 1].color = '#00811F';
 
 
@@ -94,12 +96,8 @@ colorPickers.push(new colorex({
     picker: '.picker5',
     horizontal: false,
     alphablend: alphablend,
-    onChange: (result) => {
-        document.getElementById("color").value = result.color;
-        addButtonColor(result.color);
-    }
+    onChange: changeColor
 }));
-
 colorPickers[colorPickers.length - 1].color = '#0044FF';
 
 
@@ -108,8 +106,18 @@ colorPickers.push(new colorex({
     horizontal: false,
     alphablend: !alphablend,
     color: '#760089',
-    onChange: (result) => {
-        document.getElementById("color").value = result.color;
-        addButtonColor(result.color);
-    }
+    onChange: changeColor
+}));
+
+
+colorPickers.push(new colorex({
+    picker: {
+        rainbow: '#rainbow',
+        gradient: document.getElementById('gradient'),
+        alpha: document.querySelector('#alpha')
+    },
+    horizontal: { rainbow: false, alpha: alphablend },
+    alphablend: alphablend,
+    color: '#760089',
+    onChange: changeColor
 }));
