@@ -63,6 +63,7 @@ colorPickers.push(new colorex({
 colorPickers.push(new colorex({
     picker: document.getElementById("picker2"),
     alphablend: !alphablend,
+    pixelize: { gradient: 10 },
     color: '#FF8C00',
     onChange: (result) => {
         document.getElementById("color").value = result.color;
@@ -76,6 +77,7 @@ colorPickers.push(new colorex({
     picker: '#picker3',
     horizontal: true,
     alphablend: alphablend,
+    pixelize: 7,
     onChange: (result) => {
         changeColor(result);
     }

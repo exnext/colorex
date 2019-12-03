@@ -5,7 +5,7 @@ let picker = (() => {
     const _point = Symbol('point');
     
     return class {
-        constructor({ element, click }) {
+        constructor({ element, pixelize, click }) {
             this[_point] = { x: 0, y: 0 };
     
             this.element = ((value) => {
@@ -39,6 +39,12 @@ let picker = (() => {
                 
                 click(this[_point], color);
             }, false);
+
+            Object.defineProperty(this, 'pixelize', {
+                get() {
+                    return pixelize;
+                }
+            });
         }
 
         size() {

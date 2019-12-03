@@ -8,12 +8,13 @@ import alphaPicker from './pickers/alphaPicker.js';
 
 function colorex(config) {
     let { gradient, rainbow, alpha } = createPickerElement(config);
+    let pixelize = getPixelize(config.pixelize);
     
     let gp, rp, ap;
     
     rp = new rainbowPicker({ 
         element: rainbow,
-        horizontal: config.horizontal,
+        pixelize: pixelize.rainbow,
         click: (point, color) => {
             gp.setColor(color);
             if (ap) {
@@ -28,6 +29,7 @@ function colorex(config) {
 
     gp = new gradientPicker({ 
         element: gradient,
+        pixelize: pixelize.gradient,
         click: (point, color) => {
             if (ap) {
                 ap.setColor(color);
@@ -42,7 +44,7 @@ function colorex(config) {
     if (alpha) {
         ap = new alphaPicker({
             element: alpha,
-            horizontal: config.horizontal,
+            pixelize: pixelize.alpha,
             click: (point, color) => {
                 if (config.onChange) {
                     config.onChange({ color: this.color });
@@ -71,6 +73,26 @@ function colorex(config) {
     });
 
     this.color = config.color || "red";
+
+    function getPixelize(pixelize) {
+        let result = {
+            rainbow: 0,
+            gradient: 0,
+            alpha: 0
+        }
+
+        if (typeof pixelize === 'number') {
+            result = {
+                rainbow: pixelize,
+                gradient: pixelize,
+                alpha: pixelize
+            }
+        } else {
+            result = Object.assign(result, pixelize);
+        }
+
+        return result;
+    }
 }
 
 modularization(colorex);
