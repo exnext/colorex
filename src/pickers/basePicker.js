@@ -3,9 +3,11 @@ import colorConvert from '../colorConvert.js';
 let picker = (() => {
     const _color = Symbol('color');
     const _point = Symbol('point');
+    const _pixelize = Symbol('pixelize');
     
     return class {
         constructor({ element, pixelize, click }) {
+            this[_pixelize] = pixelize;
             this[_point] = { x: 0, y: 0 };
     
             this.element = ((value) => {
@@ -39,12 +41,6 @@ let picker = (() => {
                 
                 click(this[_point], color);
             }, false);
-
-            Object.defineProperty(this, 'pixelize', {
-                get() {
-                    return pixelize;
-                }
-            });
         }
 
         size() {
@@ -93,6 +89,10 @@ let picker = (() => {
 
         get point() {
             return this[_point];
+        }
+
+        get pixelize() {
+            return this[_pixelize];
         }
     
         get color() { return this[_color]; }
