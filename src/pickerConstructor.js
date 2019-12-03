@@ -87,31 +87,33 @@ function createPickerElement2({ picker, alphablend, horizontal } = {}) {
     if (main) {
         main.classList.add('colorex');
         
-        gradient = document.createElement('div');
         rainbow = document.createElement('div');
-        main.append(gradient, rainbow);
+        gradient = document.createElement('div');
+        main.append(rainbow, gradient);
         
         if (alphablend) {
             alpha = document.createElement('div');
             main.append(alpha);
         }
     } else {
-        gradient = getElement(picker.gradient);
         rainbow = getElement(picker.rainbow);
+        gradient = getElement(picker.gradient);
 
         if (alphablend && picker.alpha) {
             alpha = getElement(picker.alpha);
         }
     }
 
-    gradient.classList.add('gradient');
     rainbow.classList.add('rainbow');
+    gradient.classList.add('gradient');
     if (alpha) {
         alpha.classList.add('alpha');
     }
 
     let horizontalOrientation = getHorizontal(horizontal);
-    main.classList.toggle('horizontal', horizontalOrientation.main);
+    if (main) {
+        main.classList.toggle('column', horizontalOrientation.main);
+    }
     rainbow.classList.toggle('horizontal', horizontalOrientation.rainbow);
     if (alpha) {
         alpha.classList.toggle('horizontal', horizontalOrientation.alpha);

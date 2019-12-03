@@ -138,3 +138,19 @@ colorPickers.push(new colorex2({
         addButtonColor(result.color);
     }
 }));
+
+colorPickers.push(new colorex2({
+    picker: {
+        rainbow: '#rainbow',
+        gradient: '#gradient',
+        alpha: '#alpha'
+    },
+    // horizontal: true,
+    horizontal: { rainbow: false, alpha: true },
+    alphablend: true,
+    color: '#760089',
+    onChange: (result) => {
+        document.getElementById("color").value = result.color;
+        addButtonColor(result.color);
+    }
+}));

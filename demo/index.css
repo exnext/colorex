@@ -94,3 +94,12 @@ input {
 #picker6 .gradient .selector {
     border-radius: 0px;
 }
+
+#picker9 *:not(#alpha) {
+    display: flex;
+}
+
+#picker9 {
+    flex-direction: column;
+    align-items: flex-end;    
+}
