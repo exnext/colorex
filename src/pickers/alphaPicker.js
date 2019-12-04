@@ -23,20 +23,25 @@ class alphaPicker extends picker1D {
         })();
     }
 
-    draw(value) {
-        const ctx = super.draw(value);
+    getPattern(value) {
         const { width, height } = this.size();
+        let canvas = document.createElement('canvas');
+        canvas.width = this.pixelize || width;
+        canvas.height = this.pixelize || height;
+        let ctx = canvas.getContext("2d");
 
         let color = colorConvert(value).rgb();
         color = colorConvert(color).hex(false);
         
         let clg = this.horizontal ?
-            ctx.createLinearGradient(width, 0, 0, 0) :
-            ctx.createLinearGradient(0, height, 0, 0)
+            ctx.createLinearGradient(canvas.width, 0, 0, 0) :
+            ctx.createLinearGradient(0, canvas.height, 0, 0)
         clg.addColorStop(0, "transparent");
         clg.addColorStop(1, color);
         ctx.fillStyle = clg;
-        ctx.fillRect(0, 0, width, height);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        return canvas;
     }
 
     position(color) {
@@ -66,12 +71,9 @@ class alphaPicker extends picker1D {
     }
 
     alphaValue() {
-        const { width, height } = this.size();
-        if (this.horizontal) {
-            return Math.round(255 - 255 * this.point.x / width);
-        } else {
-            return Math.round(255 - 255 * this.point.y / height);
-        }
+        let ctx = this.canvas.getContext("2d");
+        let rgba = ctx.getImageData(this.point.x, this.point.y, 1, 1).data;
+        return rgba[3];
     }
 }
 
