@@ -12,20 +12,25 @@ class rainbowPicker extends picker1D {
         return ["red", "fuchsia", "blue", "cyan", "lime", "yellow", "red"];
     }
 
-    draw(value) {
-        const ctx = super.draw();
+    getPattern(value) {
         const { width, height } = this.size();
+        let canvas = document.createElement('canvas');
+        canvas.width = this.pixelize || width;
+        canvas.height = this.pixelize || height;
+        let ctx = canvas.getContext("2d");
         
         let clg = this.horizontal ?
-            ctx.createLinearGradient(0, 0, width, 0) :
-            ctx.createLinearGradient(0, 0, 0, height);
+            ctx.createLinearGradient(0, 0, canvas.width, 0) :
+            ctx.createLinearGradient(0, 0, 0, canvas.height);
 
         for (let x = 0; x < this.colors.length; x++) {
             clg.addColorStop(x / (this.colors.length - 1), this.colors[x]);
         }
 
         ctx.fillStyle = clg;
-        ctx.fillRect(0, 0, width, height);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        return canvas;
     }
 
     position(color) {

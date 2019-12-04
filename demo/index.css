@@ -29,6 +29,16 @@ input {
 }
 
 
+#picker3 .rainbow .selector,
+#picker3 .alpha .selector {
+    width: calc(300px / 7 - 6px);
+    height: calc(300px / 7 - 6px);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+}
+
+
 #picker4 .rainbow .selector,
 #picker4 .alpha .selector {
     height: calc(100% + 2px) !important;
