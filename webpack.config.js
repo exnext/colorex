@@ -59,7 +59,6 @@ module.exports = {
     },
     devServer: {
         contentBase: path.resolve(__dirname, ''),
-        // compress: true,
         port: 8080,
         publicPath: '/',
         openPage: '/demo'

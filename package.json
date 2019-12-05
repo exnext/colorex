@@ -1,6 +1,6 @@
 {
   "name": "colorex",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "color picker",
   "main": "colorex.js",
   "scripts": {
@@ -16,8 +16,8 @@
     "color",
     "picker"
   ],
-  "author": "exnext",
-  "license": "ISC",
+  "author": "exnext.pl",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/exnext/colorex/issues"
   },
