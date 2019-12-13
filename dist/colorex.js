@@ -534,72 +534,55 @@ function colorConvert(color) {
 
 /* harmony default export */ var src_colorConvert = (colorConvert);
 // CONCATENATED MODULE: ./src/pickerConstructor.js
-function createPickerElement(_ref) {
-  var picker = _ref.picker,
-      horizontal = _ref.horizontal,
-      alphablend = _ref.alphablend;
+function createPickerElement() {
+  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      picker = _ref.picker,
+      alphablend = _ref.alphablend,
+      horizontal = _ref.horizontal;
 
   if (!picker) {
     throw new Error('Picker field is required');
   }
 
+  var gradient, rainbow, alpha;
   var main = getElement(picker);
-  main.classList.add('colorex');
-
-  if (horizontal) {
-    main.classList.add('horizontal');
-  }
-
-  var mr, mg, ma;
 
   if (main) {
-    mg = document.createElement('div');
-    mr = document.createElement('div');
+    main.classList.add('colorex');
+    rainbow = document.createElement('div');
+    gradient = document.createElement('div');
+    main.append(rainbow, gradient);
 
     if (alphablend) {
-      ma = document.createElement('div');
-    }
-  } else if (picker.rainbow && picker.gradient) {
-    mg = getElement(picker.gradient);
-    mr = getElement(picker.rainbow);
-
-    if (alphablend) {
-      ma = getElement(picker.alphablend);
+      alpha = document.createElement('div');
+      main.append(alpha);
     }
   } else {
-    throw new Error('Picker field is incorrect');
+    rainbow = getElement(picker.rainbow);
+    gradient = getElement(picker.gradient);
+
+    if (alphablend && picker.alpha) {
+      alpha = getElement(picker.alpha);
+    }
   }
 
-  var gradient = document.createElement('canvas');
-  var rainbow = document.createElement('canvas');
-  var sg = document.createElement('div');
-  var sr = document.createElement('div');
-  mg.classList.add('gradient');
-  mr.classList.add('rainbow');
-  sg.classList.add('selector');
-  sr.classList.add('selector');
-  var alpha, sa;
+  rainbow.classList.add('rainbow');
+  gradient.classList.add('gradient');
 
-  if (ma) {
-    alpha = document.createElement('canvas');
-    sa = document.createElement('div');
-    ma.classList.add('alpha');
-    sa.classList.add('selector');
-    ma.append(alpha, sa);
+  if (alpha) {
+    alpha.classList.add('alpha');
   }
 
-  mg.append(gradient, sg);
-  mr.append(rainbow, sr);
-  main.append(mr, mg);
-  gradient.width = mg.clientWidth;
-  gradient.height = mg.clientHeight;
-  rainbow.width = mr.clientWidth;
-  rainbow.height = mr.clientHeight;
+  var horizontalOrientation = getHorizontal(horizontal);
 
-  if (alpha && ma) {
-    main.append(ma);
-    alpha.width = ma.clientWidth;
-    alpha.height = ma.clientHeight;
+  if (main) {
+    main.classList.toggle('column', horizontalOrientation.main);
+  }
+
+  rainbow.classList.toggle('horizontal', horizontalOrientation.rainbow);
+
+  if (alpha) {
+    alpha.classList.toggle('horizontal', horizontalOrientation.alpha);
   }
 
   function getElement(value) {
@@ -612,13 +595,31 @@ function createPickerElement(_ref) {
     return null;
   }
 
+  function getHorizontal(horizontal) {
+    var result = {
+      main: false,
+      rainbow: false,
+      alpha: false
+    };
+
+    if (typeof horizontal === 'boolean') {
+      result = {
+        main: horizontal,
+        rainbow: horizontal,
+        alpha: horizontal
+      };
+    } else {
+      result = Object.assign(result, horizontal);
+      result.main = result.rainbow && result.alpha;
+    }
+
+    return result;
+  }
+
   return {
     rainbow: rainbow,
     gradient: gradient,
-    alpha: alpha,
-    sr: sr,
-    sg: sg,
-    sa: sa
+    alpha: alpha
   };
 }
 
@@ -627,230 +628,647 @@ function createPickerElement(_ref) {
 var modularization = __webpack_require__(0);
 
 // CONCATENATED MODULE: ./src/pickers/basePicker.js
-function basePicker(element) {
-  this.elements = elements;
-  this.size = size;
-  this.draw = draw;
-  this.click = click;
-  this.position = position;
-  var main = getPickerElement(element);
-  var canvas = document.createElement('canvas');
-  var selector = document.createElement('div');
-  main.append(canvas, selector);
-  canvas.width = main.clientWidth;
-  canvas.height = main.clientHeight;
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-  function elements() {
-    return {
-      main: main,
-      canvas: canvas,
-      selector: selector
-    };
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var picker = function () {
+  var _color = Symbol('color');
+
+  var _point = Symbol('point');
+
+  var _pixelize = Symbol('pixelize');
+
+  return (
+    /*#__PURE__*/
+    function () {
+      function _class(_ref) {
+        var _this = this;
+
+        var element = _ref.element,
+            pixelize = _ref.pixelize,
+            click = _ref.click;
+
+        _classCallCheck(this, _class);
+
+        this[_pixelize] = Math.abs(pixelize);
+        this[_point] = {
+          x: 0,
+          y: 0
+        };
+
+        this.element = function (value) {
+          if (typeof value === 'string') {
+            return document.querySelector(value);
+          } else if (value instanceof Element) {
+            return value;
+          }
+
+          return null;
+        }(element);
+
+        this.canvas = document.createElement('canvas');
+        this.selector = document.createElement('div');
+        this.selector.classList.add('selector');
+        this.element.append(this.canvas, this.selector);
+        this.canvas.width = this.element.clientWidth;
+        this.canvas.height = this.element.clientHeight;
+        this.canvas.addEventListener("click", function (event) {
+          _this[_point] = {
+            x: event.offsetX,
+            y: event.offsetY
+          };
+
+          _this.setSelectorPosition(_this[_point]);
+
+          var color = _this.pointColor(_this[_point]);
+
+          _this.setColor(color);
+
+          click(_this[_point], color);
+        }, false);
+      }
+
+      _createClass(_class, [{
+        key: "size",
+        value: function size() {
+          return {
+            width: this.canvas.width,
+            height: this.canvas.height
+          };
+        }
+      }, {
+        key: "draw",
+        value: function draw(value) {
+          var ctx = this.canvas.getContext("2d");
+
+          var _this$size = this.size(),
+              width = _this$size.width,
+              height = _this$size.height;
+
+          ctx.clearRect(0, 0, width, height);
+          var pattern = this.getPattern(value);
+
+          if (pattern) {
+            ctx.imageSmoothingEnabled = !this.pixelize;
+            ctx.drawImage(pattern, 0, 0, width, height);
+          }
+
+          return ctx;
+        }
+      }, {
+        key: "getPattern",
+        value: function getPattern(value) {}
+      }, {
+        key: "position",
+        value: function position(color) {
+          return {
+            x: 0,
+            y: 0
+          };
+        }
+      }, {
+        key: "setSelectorPosition",
+        value: function setSelectorPosition(point) {
+          this[_point] = {
+            x: point.x,
+            y: point.y
+          };
+          var color = this.pointColor(point);
+          this.selector.style.background = color;
+        }
+      }, {
+        key: "pointColor",
+        value: function pointColor(point) {
+          var x = Math.min(point.x, this.canvas.width - 1);
+          var y = Math.min(point.y, this.canvas.height - 1);
+          var ctx = this.canvas.getContext("2d");
+          var rgba = ctx.getImageData(x, y, 1, 1).data;
+          return src_colorConvert({
+            r: rgba[0],
+            g: rgba[1],
+            b: rgba[2],
+            a: rgba[3]
+          }).hex();
+        }
+      }, {
+        key: "setColor",
+        value: function setColor(value) {
+          this[_color] = value;
+          this.draw(this[_color]);
+          this.selector.style.background = this.pointColor(this[_point]);
+        }
+      }, {
+        key: "pointByPixelize",
+        value: function pointByPixelize(point) {
+          var x = point.x,
+              y = point.y;
+
+          if (this.pixelize) {
+            var _this$size2 = this.size(),
+                width = _this$size2.width,
+                height = _this$size2.height;
+
+            var dx = width / this.pixelize;
+            var dy = height / this.pixelize;
+            x = Math.floor(x / dx) * dx + dx / 2;
+            y = Math.floor(y / dy) * dy + dy / 2;
+          }
+
+          return {
+            x: x,
+            y: y
+          };
+        }
+      }, {
+        key: "point",
+        get: function get() {
+          return this[_point];
+        }
+      }, {
+        key: "pixelize",
+        get: function get() {
+          return this[_pixelize];
+        }
+      }, {
+        key: "color",
+        get: function get() {
+          return this[_color];
+        },
+        set: function set(value) {
+          this[_color] = value;
+          this.setColor(value);
+          var point = this.position(value);
+          this.setSelectorPosition(point);
+        }
+      }]);
+
+      return _class;
+    }()
+  );
+}();
+
+var picker1D =
+/*#__PURE__*/
+function (_picker) {
+  _inherits(picker1D, _picker);
+
+  function picker1D() {
+    _classCallCheck(this, picker1D);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(picker1D).apply(this, arguments));
   }
 
-  function size() {
-    return {
-      width: element.width,
-      height: element.height
-    };
-  }
+  _createClass(picker1D, [{
+    key: "setSelectorPosition",
+    value: function setSelectorPosition(point) {
+      _get(_getPrototypeOf(picker1D.prototype), "setSelectorPosition", this).call(this, point);
 
-  function draw() {
-    var ctx = element.getContext("2d");
-    ctx.clearRect(0, 0, element.width, element.height);
-    return ctx;
-  }
+      var _this$pointByPixelize = this.pointByPixelize(point),
+          x = _this$pointByPixelize.x,
+          y = _this$pointByPixelize.y;
 
-  function click(x, y) {}
-
-  function position(color) {}
-
-  function getPickerElement(value) {
-    if (typeof value === 'string') {
-      return document.querySelector(value);
-    } else if (value instanceof Element) {
-      return value;
+      if (this.horizontal) {
+        this.selector.style.left = x + "px";
+      } else {
+        this.selector.style.top = y + "px";
+      }
     }
+  }, {
+    key: "horizontal",
+    get: function get() {
+      return this.element.classList.contains('horizontal');
+    }
+  }]);
 
-    return null;
+  return picker1D;
+}(picker);
+
+var picker2D =
+/*#__PURE__*/
+function (_picker2) {
+  _inherits(picker2D, _picker2);
+
+  function picker2D() {
+    _classCallCheck(this, picker2D);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(picker2D).apply(this, arguments));
   }
 
-  element.addEventListener("click", function (event) {
-    click(event.offsetX, event.offsetY);
-  }, false);
-}
+  _createClass(picker2D, [{
+    key: "setSelectorPosition",
+    value: function setSelectorPosition(point) {
+      _get(_getPrototypeOf(picker2D.prototype), "setSelectorPosition", this).call(this, point);
 
-/* harmony default export */ var pickers_basePicker = (basePicker);
+      var _this$pointByPixelize2 = this.pointByPixelize(point),
+          x = _this$pointByPixelize2.x,
+          y = _this$pointByPixelize2.y;
+
+      this.selector.style.left = x + "px";
+      this.selector.style.top = y + "px";
+    }
+  }]);
+
+  return picker2D;
+}(picker);
+
+
 // CONCATENATED MODULE: ./src/pickers/gradientPicker.js
+function gradientPicker_typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { gradientPicker_typeof = function _typeof(obj) { return typeof obj; }; } else { gradientPicker_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return gradientPicker_typeof(obj); }
+
+function gradientPicker_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function gradientPicker_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function gradientPicker_createClass(Constructor, protoProps, staticProps) { if (protoProps) gradientPicker_defineProperties(Constructor.prototype, protoProps); if (staticProps) gradientPicker_defineProperties(Constructor, staticProps); return Constructor; }
+
+function gradientPicker_possibleConstructorReturn(self, call) { if (call && (gradientPicker_typeof(call) === "object" || typeof call === "function")) { return call; } return gradientPicker_assertThisInitialized(self); }
+
+function gradientPicker_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function gradientPicker_getPrototypeOf(o) { gradientPicker_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return gradientPicker_getPrototypeOf(o); }
+
+function gradientPicker_inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) gradientPicker_setPrototypeOf(subClass, superClass); }
+
+function gradientPicker_setPrototypeOf(o, p) { gradientPicker_setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return gradientPicker_setPrototypeOf(o, p); }
 
 
 
-function gradientPicker(element) {
-  pickers_basePicker.call(this, element); // this.draw = draw;
-  // this.click = click;
-  // this.position = position;
-  // function draw(color) {
-  //     const ctx = super.draw();
-  //     const clgWhite = ctx.createLinearGradient(0, 0, element.width, 0);
-  //     clgWhite.addColorStop(0, "white");
-  //     clgWhite.addColorStop(1, color);
-  //     ctx.fillStyle = clgWhite;
-  //     ctx.fillRect(0, 0, element.width, element.height);
-  //     const clgBlack = ctx.createLinearGradient(0, element.height, 0, 0);
-  //     clgBlack.addColorStop(0, "black");
-  //     clgBlack.addColorStop(1, "transparent");
-  //     ctx.fillStyle = clgBlack;
-  //     ctx.fillRect(0, 0, element.width, element.height);
-  // }
-  // function click(x, y) {
-  // }
-  // function position(color) {
-  //     const { width, height } = size();
-  //     const sorted = colorConvert(color).levels();
-  //     return {
-  //         y: Math.min(height - height * sorted.high.value / 255, height - 1),
-  //         x: Math.min(width - width * sorted.low.value / sorted.high.value, width - 1)
-  //     };
-  // }
-}
 
-gradientPicker.prototype = Object.create(pickers_basePicker.prototype);
-/* harmony default export */ var pickers_gradientPicker = (gradientPicker);
+var gradientPicker_gradientPicker =
+/*#__PURE__*/
+function (_picker2D) {
+  gradientPicker_inherits(gradientPicker, _picker2D);
+
+  function gradientPicker() {
+    gradientPicker_classCallCheck(this, gradientPicker);
+
+    return gradientPicker_possibleConstructorReturn(this, gradientPicker_getPrototypeOf(gradientPicker).apply(this, arguments));
+  }
+
+  gradientPicker_createClass(gradientPicker, [{
+    key: "getPattern",
+    value: function getPattern(value) {
+      var _this$size = this.size(),
+          width = _this$size.width,
+          height = _this$size.height;
+
+      var canvas = document.createElement('canvas');
+      canvas.width = this.pixelize || width;
+      canvas.height = this.pixelize || height;
+      var ctx = canvas.getContext("2d");
+      var color = src_colorConvert(value).hex(false);
+      color = src_colorConvert(color).sourceColor();
+      color = src_colorConvert(color).hex(false);
+      var clgWhite = ctx.createLinearGradient(0, 0, canvas.width, 0);
+      clgWhite.addColorStop(0, "white");
+      clgWhite.addColorStop(1, color);
+      ctx.fillStyle = clgWhite;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      var clgBlack = ctx.createLinearGradient(0, canvas.height, 0, 0);
+      clgBlack.addColorStop(0, "black");
+      clgBlack.addColorStop(1, "transparent");
+      ctx.fillStyle = clgBlack;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      return canvas;
+    }
+  }, {
+    key: "position",
+    value: function position(color) {
+      var _this$size2 = this.size(),
+          width = _this$size2.width,
+          height = _this$size2.height;
+
+      var sorted = src_colorConvert(color).levels();
+      return {
+        y: Math.min(height - height * sorted.high.value / 255, height - 1),
+        x: Math.min(width - width * sorted.low.value / sorted.high.value, width - 1)
+      };
+    }
+  }]);
+
+  return gradientPicker;
+}(picker2D);
+
+/* harmony default export */ var pickers_gradientPicker = (gradientPicker_gradientPicker);
 // CONCATENATED MODULE: ./src/pickers/rainbowPicker.js
+function rainbowPicker_typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { rainbowPicker_typeof = function _typeof(obj) { return typeof obj; }; } else { rainbowPicker_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return rainbowPicker_typeof(obj); }
+
+function rainbowPicker_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function rainbowPicker_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function rainbowPicker_createClass(Constructor, protoProps, staticProps) { if (protoProps) rainbowPicker_defineProperties(Constructor.prototype, protoProps); if (staticProps) rainbowPicker_defineProperties(Constructor, staticProps); return Constructor; }
+
+function rainbowPicker_possibleConstructorReturn(self, call) { if (call && (rainbowPicker_typeof(call) === "object" || typeof call === "function")) { return call; } return rainbowPicker_assertThisInitialized(self); }
+
+function rainbowPicker_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function rainbowPicker_set(target, property, value, receiver) { if (typeof Reflect !== "undefined" && Reflect.set) { rainbowPicker_set = Reflect.set; } else { rainbowPicker_set = function set(target, property, value, receiver) { var base = rainbowPicker_superPropBase(target, property); var desc; if (base) { desc = Object.getOwnPropertyDescriptor(base, property); if (desc.set) { desc.set.call(receiver, value); return true; } else if (!desc.writable) { return false; } } desc = Object.getOwnPropertyDescriptor(receiver, property); if (desc) { if (!desc.writable) { return false; } desc.value = value; Object.defineProperty(receiver, property, desc); } else { _defineProperty(receiver, property, value); } return true; }; } return rainbowPicker_set(target, property, value, receiver); }
+
+function _set(target, property, value, receiver, isStrict) { var s = rainbowPicker_set(target, property, value, receiver || target); if (!s && isStrict) { throw new Error('failed to set property'); } return value; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function rainbowPicker_get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { rainbowPicker_get = Reflect.get; } else { rainbowPicker_get = function _get(target, property, receiver) { var base = rainbowPicker_superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return rainbowPicker_get(target, property, receiver || target); }
+
+function rainbowPicker_superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = rainbowPicker_getPrototypeOf(object); if (object === null) break; } return object; }
+
+function rainbowPicker_getPrototypeOf(o) { rainbowPicker_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return rainbowPicker_getPrototypeOf(o); }
+
+function rainbowPicker_inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) rainbowPicker_setPrototypeOf(subClass, superClass); }
+
+function rainbowPicker_setPrototypeOf(o, p) { rainbowPicker_setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return rainbowPicker_setPrototypeOf(o, p); }
 
 
 
-function rainbowPicker(element, horizontal) {
-  pickers_basePicker.call(this, element); // this.draw = draw;
-  // this.click = click;
-  // this.position = position;
-  // const colors = ["red", "fuchsia", "blue", "cyan", "lime", "yellow", "red"];
-  // function draw() {
-  //     let ctx = super.draw();
-  //     let clg = horizontal ?
-  //         ctx.createLinearGradient(0, 0, element.width, 0) :
-  //         ctx.createLinearGradient(0, 0, 0, element.height);
-  //     for (let x = 0; x < colors.length; x++) {
-  //         clg.addColorStop(x / (colors.length - 1), colors[x]);
-  //     }
-  //     ctx.fillStyle = clg;
-  //     ctx.fillRect(0, 0, element.width, element.height);
-  // }
-  // function click(x, y) {
-  // }
-  // function position(color) {
-  //     const { width, height } = size();
-  //     let { degree, sorted, index, getMeasurement } = (() => {
-  //         const degree = horizontal ? width / (rainbowColors.length - 1) : height / (rainbowColors.length - 1);
-  //         const bitR = rainbowColors.map((x) => colorConvert(x).bits().bit_rgb);
-  //         const sorted = colorConvert(color).levels();
-  //         const bit = colorConvert(color).bits();
-  //         const index = bitR.indexOf(bit.bit_rgb);
-  //         function getMeasurement(rgb) {
-  //             let color = colorConvert(rgb).hex(config.alphablend);
-  //             let sorted = colorConvert(rgb).bits();
-  //             let index = bitR.indexOf(sorted.bit_rgb);
-  //             return { color, sorted, index }
-  //         }
-  //         return { degree, sorted, index, getMeasurement }
-  //     })();
-  //     let rgb = {};
-  //     rgb[sorted.high.key] = 255;
-  //     rgb[sorted.low.key] = 0;
-  //     rgb[sorted.mid.key] = 0;
-  //     let base = getMeasurement(rgb);
-  //     rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255;
-  //     let calc = getMeasurement(rgb);
-  //     rgb[sorted.mid.key] = 255;
-  //     let indirect = getMeasurement(rgb);
-  //     let delta = 0;
-  //     rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255;
-  //     //todo: must be changed
-  //     if (base.index > index) {
-  //         delta = degree * (rgb[sorted.mid.key] - sorted.mid.value) / 255;
-  //     } else if (base.index < index) {
-  //         delta = - (degree * (sorted.mid.value - rgb[sorted.mid.key]) / 255);
-  //     } else {
-  //         delta = degree * (sorted.mid.value - rgb[sorted.mid.key]) / 255;
-  //     }
-  //     if (calc.color == indirect.color && sorted.mid.value > 127 && sorted.mid.value < 255 && index - base.index === 1
-  //         || calc.color == base.color && sorted.mid.value && sorted.mid.value < 128 && index > indirect.index) {
-  //         delta = -delta;
-  //     } else if (calc.color == base.color && sorted.mid.value && sorted.mid.value < 128 && index === 0 && indirect.index === 5) {
-  //         index = indirect.index;
-  //         delta = degree - delta;
-  //     }
-  //     if (horizontal) {
-  //         return {
-  //             y: height,
-  //             x: degree * index + delta
-  //         };
-  //     } else {
-  //         return {
-  //             y: degree * index + delta,
-  //             x: width
-  //         };
-  //     }
-  // }
-}
 
-rainbowPicker.prototype = Object.create(pickers_basePicker.prototype);
-/* harmony default export */ var pickers_rainbowPicker = (rainbowPicker);
+var rainbowPicker_rainbowPicker =
+/*#__PURE__*/
+function (_picker1D) {
+  rainbowPicker_inherits(rainbowPicker, _picker1D);
+
+  function rainbowPicker(config) {
+    var _this;
+
+    rainbowPicker_classCallCheck(this, rainbowPicker);
+
+    _this = rainbowPicker_possibleConstructorReturn(this, rainbowPicker_getPrototypeOf(rainbowPicker).call(this, config));
+
+    _this.draw();
+
+    return _this;
+  }
+
+  rainbowPicker_createClass(rainbowPicker, [{
+    key: "getPattern",
+    value: function getPattern(value) {
+      var _this$size = this.size(),
+          width = _this$size.width,
+          height = _this$size.height;
+
+      var canvas = document.createElement('canvas');
+      canvas.width = this.pixelize || width;
+      canvas.height = this.pixelize || height;
+      var ctx = canvas.getContext("2d");
+      var clg = this.horizontal ? ctx.createLinearGradient(0, 0, canvas.width, 0) : ctx.createLinearGradient(0, 0, 0, canvas.height);
+
+      for (var x = 0; x < this.colors.length; x++) {
+        clg.addColorStop(x / (this.colors.length - 1), this.colors[x]);
+      }
+
+      ctx.fillStyle = clg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      return canvas;
+    }
+  }, {
+    key: "position",
+    value: function position(color) {
+      var _this2 = this;
+
+      var _this$size2 = this.size(),
+          width = _this$size2.width,
+          height = _this$size2.height;
+
+      var _ref = function () {
+        var degree = _this2.horizontal ? width / (_this2.colors.length - 1) : height / (_this2.colors.length - 1);
+
+        var bitR = _this2.colors.map(function (x) {
+          return src_colorConvert(x).bits().bit_rgb;
+        });
+
+        var sorted = src_colorConvert(color).levels();
+        var bit = src_colorConvert(color).bits();
+        var index = bitR.indexOf(bit.bit_rgb);
+
+        function getMeasurement(rgb) {
+          var color = src_colorConvert(rgb).hex();
+          var sorted = src_colorConvert(rgb).bits();
+          var index = bitR.indexOf(sorted.bit_rgb);
+          return {
+            color: color,
+            sorted: sorted,
+            index: index
+          };
+        }
+
+        return {
+          degree: degree,
+          sorted: sorted,
+          index: index,
+          getMeasurement: getMeasurement
+        };
+      }(),
+          degree = _ref.degree,
+          sorted = _ref.sorted,
+          index = _ref.index,
+          getMeasurement = _ref.getMeasurement;
+
+      var rgb = {};
+      rgb[sorted.high.key] = 255;
+      rgb[sorted.low.key] = 0;
+      rgb[sorted.mid.key] = 0;
+      var base = getMeasurement(rgb);
+      rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255;
+      var calc = getMeasurement(rgb);
+      rgb[sorted.mid.key] = 255;
+      var indirect = getMeasurement(rgb);
+      var delta = 0;
+      rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255; //todo: must be changed
+
+      if (base.index > index) {
+        delta = degree * (rgb[sorted.mid.key] - sorted.mid.value) / 255;
+      } else if (base.index < index) {
+        delta = -(degree * (sorted.mid.value - rgb[sorted.mid.key]) / 255);
+      } else {
+        delta = degree * (sorted.mid.value - rgb[sorted.mid.key]) / 255;
+      }
+
+      if (calc.color == indirect.color && sorted.mid.value > 127 && sorted.mid.value < 255 && index - base.index === 1 || calc.color == base.color && sorted.mid.value && sorted.mid.value < 128 && index > indirect.index) {
+        delta = -delta;
+      } else if (calc.color == base.color && sorted.mid.value && sorted.mid.value < 128 && index === 0 && indirect.index === 5) {
+        index = indirect.index;
+        delta = degree - delta;
+      }
+
+      if (this.horizontal) {
+        return {
+          y: height,
+          x: degree * index + delta
+        };
+      } else {
+        return {
+          y: degree * index + delta,
+          x: width
+        };
+      }
+    }
+  }, {
+    key: "colors",
+    get: function get() {
+      return ["red", "fuchsia", "blue", "cyan", "lime", "yellow", "red"];
+    }
+  }, {
+    key: "color",
+    get: function get() {
+      return rainbowPicker_get(rainbowPicker_getPrototypeOf(rainbowPicker.prototype), "color", this);
+    },
+    set: function set(value) {
+      var color = src_colorConvert(value).hex(false);
+      color = src_colorConvert(color).sourceColor();
+      color = src_colorConvert(color).hex(false);
+      var point = this.position(color);
+      this.setSelectorPosition(point);
+
+      _set(rainbowPicker_getPrototypeOf(rainbowPicker.prototype), "color", color, this, true);
+    }
+  }]);
+
+  return rainbowPicker;
+}(picker1D);
+
+/* harmony default export */ var pickers_rainbowPicker = (rainbowPicker_rainbowPicker);
 // CONCATENATED MODULE: ./src/pickers/alphaPicker.js
+function alphaPicker_typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { alphaPicker_typeof = function _typeof(obj) { return typeof obj; }; } else { alphaPicker_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return alphaPicker_typeof(obj); }
+
+function alphaPicker_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function alphaPicker_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function alphaPicker_createClass(Constructor, protoProps, staticProps) { if (protoProps) alphaPicker_defineProperties(Constructor.prototype, protoProps); if (staticProps) alphaPicker_defineProperties(Constructor, staticProps); return Constructor; }
+
+function alphaPicker_possibleConstructorReturn(self, call) { if (call && (alphaPicker_typeof(call) === "object" || typeof call === "function")) { return call; } return alphaPicker_assertThisInitialized(self); }
+
+function alphaPicker_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function alphaPicker_get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { alphaPicker_get = Reflect.get; } else { alphaPicker_get = function _get(target, property, receiver) { var base = alphaPicker_superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return alphaPicker_get(target, property, receiver || target); }
+
+function alphaPicker_superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = alphaPicker_getPrototypeOf(object); if (object === null) break; } return object; }
+
+function alphaPicker_getPrototypeOf(o) { alphaPicker_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return alphaPicker_getPrototypeOf(o); }
+
+function alphaPicker_inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) alphaPicker_setPrototypeOf(subClass, superClass); }
+
+function alphaPicker_setPrototypeOf(o, p) { alphaPicker_setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return alphaPicker_setPrototypeOf(o, p); }
 
 
 
-function alphaPicker(element, horizontal) {
-  pickers_basePicker.call(this, element); // this.draw = draw;
-  // this.click = click;
-  // this.position = position;
-  // drawBackground();
-  // function draw(color) {
-  //     let ctx = super.draw();
-  //     let clg = horizontal ?
-  //         ctx.createLinearGradient(0, 0, element.width, 0) :
-  //         ctx.createLinearGradient(0, element.height, 0, 0)
-  //     clg.addColorStop(0, "transparent");
-  //     clg.addColorStop(1, color);
-  //     ctx.fillStyle = clg;
-  //     ctx.fillRect(0, 0, element.width, element.height);
-  // }
-  // function click(x, y) {
-  // }
-  // function position(color) {
-  //     const { width, height } = size();
-  //     const alphaValue = colorConvert(color).alpha();
-  //     if (horizontal) {
-  //         return {
-  //             y: height,
-  //             x: width * alphaValue / 255
-  //         };
-  //     } else {
-  //         return {
-  //             y: height - height * alphaValue / 255,
-  //             x: width
-  //         };
-  //     }
-  // }
-  // function drawBackground() {
-  //     const alphaBackground = getComputedStyle(element).getPropertyValue('--alpha-background');
-  //     const bg = document.createElement('canvas');
-  //     bg.width = horizontal ?
-  //         element.height :
-  //         element.width;
-  //     bg.height = bg.width;
-  //     const ctx = bg.getContext("2d");
-  //     ctx.fillStyle = 'white';
-  //     ctx.fillRect(0, 0, bg.width, bg.height);
-  //     ctx.fillStyle = alphaBackground;
-  //     ctx.fillRect(0, 0, bg.width / 2, bg.width / 2);
-  //     ctx.fillRect(bg.width / 2, bg.width / 2, bg.width / 2, bg.width / 2);
-  //     element.style.background = 'url(' + bg.toDataURL("image/png") + ')';
-  // }
-}
 
-alphaPicker.prototype = Object.create(pickers_basePicker.prototype);
-/* harmony default export */ var pickers_alphaPicker = (alphaPicker);
+var alphaPicker_alphaPicker =
+/*#__PURE__*/
+function (_picker1D) {
+  alphaPicker_inherits(alphaPicker, _picker1D);
+
+  function alphaPicker(config) {
+    var _this;
+
+    alphaPicker_classCallCheck(this, alphaPicker);
+
+    _this = alphaPicker_possibleConstructorReturn(this, alphaPicker_getPrototypeOf(alphaPicker).call(this, config));
+
+    (function () {
+      var alphaBackground = getComputedStyle(_this.canvas).getPropertyValue('background-color');
+      var bg = document.createElement('canvas');
+      bg.width = _this.horizontal ? _this.canvas.height : _this.canvas.width;
+      bg.height = bg.width;
+      var ctx = bg.getContext("2d");
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, bg.width, bg.height);
+      ctx.fillStyle = alphaBackground;
+      ctx.fillRect(0, 0, bg.width / 2, bg.width / 2);
+      ctx.fillRect(bg.width / 2, bg.width / 2, bg.width / 2, bg.width / 2);
+      _this.canvas.style.background = 'url(' + bg.toDataURL("image/png") + ')';
+    })();
+
+    return _this;
+  }
+
+  alphaPicker_createClass(alphaPicker, [{
+    key: "getPattern",
+    value: function getPattern(value) {
+      var _this$size = this.size(),
+          width = _this$size.width,
+          height = _this$size.height;
+
+      var canvas = document.createElement('canvas');
+      canvas.width = this.pixelize || width;
+      canvas.height = this.pixelize || height;
+      var ctx = canvas.getContext("2d");
+      var color = src_colorConvert(value).rgb();
+      color = src_colorConvert(color).hex(false);
+      var clg = this.horizontal ? ctx.createLinearGradient(canvas.width, 0, 0, 0) : ctx.createLinearGradient(0, canvas.height, 0, 0);
+      clg.addColorStop(0, "transparent");
+      clg.addColorStop(1, color);
+      ctx.fillStyle = clg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      return canvas;
+    }
+  }, {
+    key: "position",
+    value: function position(color) {
+      var _this$size2 = this.size(),
+          width = _this$size2.width,
+          height = _this$size2.height;
+
+      var alphaValue = src_colorConvert(color).alpha();
+
+      if (this.horizontal) {
+        return {
+          y: height,
+          x: Math.round(width - width * alphaValue / 255)
+        };
+      } else {
+        return {
+          y: Math.round(height - height * alphaValue / 255),
+          x: width
+        };
+      }
+    }
+  }, {
+    key: "pointColor",
+    value: function pointColor(point) {
+      return this.color;
+    }
+  }, {
+    key: "setColor",
+    value: function setColor(value) {
+      var color = src_colorConvert(value).rgb();
+
+      alphaPicker_get(alphaPicker_getPrototypeOf(alphaPicker.prototype), "setColor", this).call(this, src_colorConvert(color).hex(false));
+    }
+  }, {
+    key: "alphaValue",
+    value: function alphaValue() {
+      var ctx = this.canvas.getContext("2d");
+      var rgba = ctx.getImageData(this.point.x, this.point.y, 1, 1).data;
+      return rgba[3];
+    }
+  }]);
+
+  return alphaPicker;
+}(picker1D);
+
+/* harmony default export */ var pickers_alphaPicker = (alphaPicker_alphaPicker);
 // CONCATENATED MODULE: ./src/colorex.js
 
 
@@ -863,466 +1281,103 @@ function colorex(config) {
   var _this = this;
 
   var _createPickerElement = pickerConstructor(config),
-      rainbow = _createPickerElement.rainbow,
       gradient = _createPickerElement.gradient,
-      alpha = _createPickerElement.alpha,
-      sr = _createPickerElement.sr,
-      sg = _createPickerElement.sg,
-      sa = _createPickerElement.sa;
+      rainbow = _createPickerElement.rainbow,
+      alpha = _createPickerElement.alpha;
 
-  var gradientDetail, rainbowDetail, alphaDetail;
-  var rainbowColors = ["red", "fuchsia", "blue", "cyan", "lime", "yellow", "red"];
-  Object.freeze(rainbowColors);
-  rainbow.addEventListener("click", rainbowClick, false);
-  gradient.addEventListener("click", gradientClick, false);
+  var pixelize = getPixelize(config.pixelize);
+  var gp, rp, ap;
+  rp = new pickers_rainbowPicker({
+    element: rainbow,
+    pixelize: pixelize.rainbow,
+    click: function click(point, color) {
+      gp.setColor(color);
 
-  if (alpha) {
-    alpha.addEventListener("click", alphaClick, false);
-    drawAlphaPickerBackground(alpha);
-  }
-
-  drawRainbowPicker(rainbow);
-
-  function drawAlphaPickerBackground(element) {
-    if (!element) {
-      return;
-    }
-
-    var alphaBackground = getComputedStyle(element).getPropertyValue('--alpha-background');
-    var bg = document.createElement('canvas');
-    bg.width = config.horizontal ? element.height : element.width;
-    bg.height = bg.width;
-    var bgCtx = bg.getContext("2d");
-    bgCtx.fillStyle = 'white';
-    bgCtx.fillRect(0, 0, bg.width, bg.height);
-    bgCtx.fillStyle = alphaBackground;
-    bgCtx.fillRect(0, 0, bg.width / 2, bg.width / 2);
-    bgCtx.fillRect(bg.width / 2, bg.width / 2, bg.width / 2, bg.width / 2);
-    element.style.background = 'url(' + bg.toDataURL("image/png") + ')';
-  }
-
-  function drawRainbowPicker(element) {
-    var ctx = element.getContext("2d");
-    var grd;
-
-    if (config.horizontal) {
-      grd = ctx.createLinearGradient(0, 0, element.width, 0);
-    } else {
-      grd = ctx.createLinearGradient(0, 0, 0, element.height);
-    }
-
-    for (var x = 0; x < rainbowColors.length; x++) {
-      grd.addColorStop(x / (rainbowColors.length - 1), rainbowColors[x]);
-    }
-
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, element.width, element.height);
-  }
-
-  ;
-
-  function drawGradientPicker(element, color) {
-    var ctx = element.getContext("2d");
-    ctx.clearRect(0, 0, element.width, element.height);
-    var grdWhite = ctx.createLinearGradient(0, 0, element.width, 0);
-    grdWhite.addColorStop(0, "white");
-    grdWhite.addColorStop(1, color);
-    ctx.fillStyle = grdWhite;
-    ctx.fillRect(0, 0, element.width, element.height);
-    var grdBlack = ctx.createLinearGradient(0, element.height, 0, 0);
-    grdBlack.addColorStop(0, "black");
-    grdBlack.addColorStop(1, "transparent");
-    ctx.fillStyle = grdBlack;
-    ctx.fillRect(0, 0, element.width, element.height);
-  }
-
-  ;
-
-  function drawAlphaPicker(element, color) {
-    var ctx = element.getContext("2d");
-    ctx.clearRect(0, 0, element.width, element.height);
-    var grdAlpha;
-
-    if (config.horizontal) {
-      grdAlpha = ctx.createLinearGradient(0, 0, element.width, 0);
-    } else {
-      grdAlpha = ctx.createLinearGradient(0, element.height, 0, 0);
-    }
-
-    grdAlpha.addColorStop(0, "transparent");
-    grdAlpha.addColorStop(1, color);
-    ctx.fillStyle = grdAlpha;
-    ctx.fillRect(0, 0, element.width, element.height);
-  }
-
-  function rainbowClick(event) {
-    rainbowDetail = {
-      element: event.target,
-      x: event.offsetX,
-      y: event.offsetY,
-      color: undefined
-    };
-
-    if (gradientDetail) {
-      gradientDetail.color = undefined;
-    }
-
-    setGradient();
-  }
-
-  ;
-
-  function gradientClick(event) {
-    gradientDetail = {
-      element: event.target,
-      x: event.offsetX,
-      y: event.offsetY,
-      color: undefined
-    };
-    setColor();
-  }
-
-  function alphaClick(event) {
-    alphaDetail = {
-      element: this,
-      x: event.offsetX,
-      y: event.offsetY
-    };
-    setAlpha();
-    setColor();
-  }
-
-  function colorFromPointOnElement(element, x, y) {
-    var ctx = element.getContext("2d");
-    var rgba = ctx.getImageData(x, y, 1, 1).data;
-    return src_colorConvert({
-      r: rgba[0],
-      g: rgba[1],
-      b: rgba[2],
-      a: rgba[3]
-    }).hex(config.alphablend);
-  }
-
-  function setGradient() {
-    if (rainbowDetail) {
-      rainbowDetail.color = rainbowDetail.color || colorFromPointOnElement(rainbowDetail.element, rainbowDetail.x, rainbowDetail.y);
-      drawGradientPicker(gradient, rainbowDetail.color);
-
-      if (config.horizontal) {
-        sr.style.left = rainbowDetail.x + "px";
-      } else {
-        sr.style.top = rainbowDetail.y + "px";
-      }
-
-      sr.style.background = rainbowDetail.color;
-      setColor();
-    }
-  }
-
-  function setColor() {
-    if (gradientDetail) {
-      gradientDetail.color = gradientDetail.color || colorFromPointOnElement(gradientDetail.element, gradientDetail.x, gradientDetail.y);
-      var left = gradientDetail.x + "px";
-      var top = gradientDetail.y + "px";
-      sg.style.left = left;
-      sg.style.top = top;
-      sg.style.background = gradientDetail.color;
-
-      if (alpha) {
-        drawAlphaPicker(alpha, gradientDetail.color);
-        sa.style.background = gradientDetail.color;
+      if (ap) {
+        ap.setColor(color);
       }
 
       if (config.onChange) {
-        var rgba = src_colorConvert(gradientDetail.color).rgb();
-        rgba.a = getAlphaValue();
         config.onChange({
-          color: src_colorConvert(rgba).hex(config.alphablend)
+          color: _this.color
         });
       }
     }
-  }
-
-  ;
-
-  function setAlpha() {
-    if (alphaDetail) {
-      if (config.horizontal) {
-        sa.style.left = alphaDetail.x + "px";
-      } else {
-        sa.style.top = alphaDetail.y + "px";
-      }
-    }
-  }
-
-  function getAlphaValue() {
-    if (alphaDetail) {
-      if (config.horizontal) {
-        return Math.round(255 - 255 * alphaDetail.x / alpha.width);
-      } else {
-        return Math.round(255 - 255 * alphaDetail.y / alpha.height);
-      }
-    } else {
-      return 255;
-    }
-  }
-
-  function calcPosOnRainbow(color) {
-    var w = rainbow.width;
-    var h = rainbow.height;
-
-    var _ref = function () {
-      var degree = config.horizontal ? w / (rainbowColors.length - 1) : h / (rainbowColors.length - 1);
-      var bitR = rainbowColors.map(function (x) {
-        return src_colorConvert(x).bits().bit_rgb;
-      });
-      var sorted = src_colorConvert(color).levels();
-      var bit = src_colorConvert(color).bits();
-      var index = bitR.indexOf(bit.bit_rgb);
-
-      function getMeasurement(rgb) {
-        var color = src_colorConvert(rgb).hex(config.alphablend);
-        var sorted = src_colorConvert(rgb).bits();
-        var index = bitR.indexOf(sorted.bit_rgb);
-        return {
-          color: color,
-          sorted: sorted,
-          index: index
-        };
+  });
+  gp = new pickers_gradientPicker({
+    element: gradient,
+    pixelize: pixelize.gradient,
+    click: function click(point, color) {
+      if (ap) {
+        ap.setColor(color);
       }
 
-      return {
-        degree: degree,
-        sorted: sorted,
-        index: index,
-        getMeasurement: getMeasurement
-      };
-    }(),
-        degree = _ref.degree,
-        sorted = _ref.sorted,
-        index = _ref.index,
-        getMeasurement = _ref.getMeasurement;
-
-    var rgb = {};
-    rgb[sorted.high.key] = 255;
-    rgb[sorted.low.key] = 0;
-    rgb[sorted.mid.key] = 0;
-    var base = getMeasurement(rgb);
-    rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255;
-    var calc = getMeasurement(rgb);
-    rgb[sorted.mid.key] = 255;
-    var indirect = getMeasurement(rgb);
-    var delta = 0;
-    rgb[sorted.mid.key] = ((sorted.mid.value & 255) >> 7) * 255; //todo: must be changed
-
-    if (base.index > index) {
-      delta = degree * (rgb[sorted.mid.key] - sorted.mid.value) / 255;
-    } else if (base.index < index) {
-      delta = -(degree * (sorted.mid.value - rgb[sorted.mid.key]) / 255);
-    } else {
-      delta = degree * (sorted.mid.value - rgb[sorted.mid.key]) / 255;
+      if (config.onChange) {
+        config.onChange({
+          color: _this.color
+        });
+      }
     }
+  });
 
-    if (calc.color == indirect.color && sorted.mid.value > 127 && sorted.mid.value < 255 && index - base.index === 1 || calc.color == base.color && sorted.mid.value && sorted.mid.value < 128 && index > indirect.index) {
-      delta = -delta;
-    } else if (calc.color == base.color && sorted.mid.value && sorted.mid.value < 128 && index === 0 && indirect.index === 5) {
-      index = indirect.index;
-      delta = degree - delta;
-    }
-
-    if (config.horizontal) {
-      return {
-        y: h,
-        x: degree * index + delta
-      };
-    } else {
-      return {
-        y: degree * index + delta,
-        x: w
-      };
-    }
-  }
-
-  function calcPosOnGradient(color) {
-    var w = gradient.width;
-    var h = gradient.height;
-    var sorted = src_colorConvert(color).levels();
-    return {
-      y: Math.min(h - h * sorted.high.value / 255, h - 1),
-      x: Math.min(w - w * sorted.low.value / sorted.high.value, w - 1)
-    };
-  }
-
-  function calcPosOnAlpha(color) {
-    var w = alpha.width;
-    var h = alpha.height;
-    var alphaValue = src_colorConvert(color).alpha();
-
-    if (config.horizontal) {
-      return {
-        y: h,
-        x: w * alphaValue / 255
-      };
-    } else {
-      return {
-        y: h - h * alphaValue / 255,
-        x: w
-      };
-    }
+  if (alpha) {
+    ap = new pickers_alphaPicker({
+      element: alpha,
+      pixelize: pixelize.alpha,
+      click: function click(point, color) {
+        if (config.onChange) {
+          config.onChange({
+            color: _this.color
+          });
+        }
+      }
+    });
   }
 
   Object.defineProperty(this, 'color', {
     get: function get() {
-      var rgba = src_colorConvert(gradientDetail.color).rgb();
-      rgba.a = getAlphaValue();
-      return src_colorConvert(rgba).hex(config.alphablend);
-    },
-    set: function set(value) {
-      var color = src_colorConvert(value).hex(false);
-      var baseColor = src_colorConvert(color).sourceColor();
-      baseColor = src_colorConvert(baseColor).hex(false);
-      var posR = calcPosOnRainbow(baseColor);
-      rainbowDetail = {
-        element: config.rainbow,
-        x: posR.x,
-        y: posR.y,
-        color: baseColor
-      };
-      setGradient();
-      var posG = calcPosOnGradient(color);
-      gradientDetail = {
-        element: gradient,
-        x: posG.x,
-        y: posG.y,
-        color: color
-      };
+      var rgb = src_colorConvert(gp.color).rgb();
 
-      if (config.alphablend) {
-        var posA = calcPosOnAlpha(value);
-        alphaDetail = {
-          element: _this,
-          x: posA.x,
-          y: posA.y
-        };
-        setAlpha();
+      if (ap) {
+        rgb.a = ap.alphaValue();
       }
 
-      setColor();
+      return src_colorConvert(rgb).hex(!!ap);
+    },
+    set: function set(value) {
+      rp.color = value;
+      gp.color = value;
+
+      if (ap) {
+        ap.color = value;
+      }
     }
   });
   this.color = config.color || "red";
-}
 
-;
+  function getPixelize(pixelize) {
+    var result = {
+      rainbow: 0,
+      gradient: 0,
+      alpha: 0
+    };
 
-function colorex2(config) {
-  var _createPickerElement2 = createPickerElement2(config),
-      gradient = _createPickerElement2.gradient,
-      rainbow = _createPickerElement2.rainbow,
-      alpha = _createPickerElement2.alpha;
+    if (typeof pixelize === 'number') {
+      result = {
+        rainbow: pixelize,
+        gradient: pixelize,
+        alpha: pixelize
+      };
+    } else {
+      result = Object.assign(result, pixelize);
+    }
 
-  pickers_gradientPicker(gradient);
-  pickers_rainbowPicker(rainbow, config.horizontal);
-
-  if (alpha) {
-    pickers_alphaPicker(alpha, config.horizontal);
-  } // Object.defineProperty(this, 'color', {
-  //     get: () => {
-  //         let rgba = colorConvert(gradientDetail.color).rgb();
-  //         rgba.a = getAlphaValue(); 
-  //         return colorConvert(rgba).hex(config.alphablend);
-  //     },
-  //     set: (value) => {
-  //         let color = colorConvert(value).hex(false);
-  //         let baseColor = colorConvert(color).sourceColor();
-  //         baseColor = colorConvert(baseColor).hex(false);
-  //         let posR = calcPosOnRainbow(baseColor);
-  //         rainbowDetail = {
-  //             element: config.rainbow,
-  //             x: posR.x,
-  //             y: posR.y,
-  //             color: baseColor
-  //         };
-  //         setGradient();
-  //         let posG = calcPosOnGradient(color);
-  //         gradientDetail = {
-  //             element: gradient,
-  //             x: posG.x,
-  //             y: posG.y,
-  //             color: color
-  //         };
-  //         if (config.alphablend) {
-  //             let posA = calcPosOnAlpha(value);
-  //             alphaDetail = {
-  //                 element: this,
-  //                 x: posA.x,
-  //                 y: posA.y
-  //             };
-  //             setAlpha();
-  //         }
-  //         setColor();
-  //     }
-  // });
-  // this.color = config.color || "red";
-
+    return result;
+  }
 }
 
 Object(modularization["a" /* default */])(colorex);
 /* harmony default export */ var src_colorex = __webpack_exports__["default"] = (colorex);
-
-function createPickerElement2(_ref2) {
-  var picker = _ref2.picker,
-      alphablend = _ref2.alphablend;
-
-  if (!picker) {
-    throw new Error('Picker field is required');
-  }
-
-  var gradient, rainbow, alpha;
-  var main = getElement(picker);
-
-  if (main) {
-    main.classList.add('colorex');
-    gradient = document.createElement('div');
-    rainbow = document.createElement('div');
-    main.append(gradient, rainbow);
-
-    if (alphablend) {
-      alpha = document.createElement('div');
-      main.append(alpha);
-    }
-  } else {
-    gradient = getElement(picker.gradient);
-    rainbow = getElement(picker.rainbow);
-
-    if (alphablend && picker.alpha) {
-      alpha = getElement(picker.alpha);
-    }
-  }
-
-  gradient.classList.add('gradient');
-  rainbow.classList.add('rainbow');
-
-  if (alpha) {
-    alpha.classList.add('alpha');
-  }
-
-  function getElement(value) {
-    if (typeof value === 'string') {
-      return document.querySelector(value);
-    } else if (value instanceof Element) {
-      return value;
-    }
-
-    return null;
-  }
-
-  return {
-    rainbow: rainbow,
-    gradient: gradient,
-    alpha: alpha
-  };
-}
 
 /***/ })
 /******/ ]);
