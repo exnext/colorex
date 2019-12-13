@@ -1,17 +1,17 @@
 # colorex
 
-Engine of color picker which you can use to create color picker control in any javascript framework.
+Engine of color picker which you can use to create a component in any javascript framework.
 
-## Including in a browser
+## Start in your website.
 
 ```html
 <link href="colorex.css" rel="stylesheet">
 <script type='text/javascript' src='colorex.js'></script>
 ```
 
-## Create simply component
+## Create a simple component
 
-Example from below presents code to create simply component with rainbow and gradeint pickers.
+Example from below presents a code to create a simple component with rainbow and gradient pickers.
 
 ```js
 let config = {
@@ -25,9 +25,13 @@ let colorpicker = new colorex(config);
 <div id="picker1"></div>
 ```
 
+<p align="center">
+    <img src="./image/simple.png">
+</p>
+
 ## Set and get color
 
-Each object of colorex has color property, which we can use to set and get color value. Setter allow any html type which presents color. Getter return only heaxadecimal value.
+Each object of colorex has property, which we can use to set and get color value. Setter allows any html type which presents color. Getter return only hexadecimal value.
 
 ```js
 colorpicker.color = 'red';
@@ -37,9 +41,9 @@ colorpicker.color = 'rgb(0, 0, 255)';
 let color = colorpicker.color; //#0000ff
 ```
 
-## Create component with alphablend
+## Create a component with alphablend detail
 
-Adding alphablend with true value, we create colorex component with alphablend picker. Getter of color property return hacadecimal value with alpha;
+Adding an alphablend field with the value set to true, we create colorex component with alpha blend picker. Getter of the color property return hexadecimal value with alpha level.
 
 ```js
 let config = {
@@ -55,9 +59,13 @@ colorpicker.color = 'rgb(0, 0, 255, 0.5)';
 let color = colorpicker.color; //#0000ff7f
 ```
 
-## Initialization start color
+<p align="center">
+    <img src="./image/alphablend.png">
+</p>
 
-User can create component with start value of color. It is necesary if default color should not be visible on the start
+## Initial color
+
+Create component with initial value of the color if default color should not be visible on the start.
 
 ```js
 let config = {
@@ -70,9 +78,9 @@ let colorpicker = new colorex(config);
 let color = colorpicker.color;
 ```
 
-## Change event
+## Events
 
-All clicked on picker evokes onChange event. Argument has color filed with actual value of color for colorex component; 
+All click events on each picker evokes onChange event. Its argument has included new value of color, which can also be read from color field of colorex component.
 
 ```js
 let config = {
@@ -87,7 +95,7 @@ let colorpicker = new colorex(config);
 
 ## Horizontal pickers
 
-Adding horizontal with true value, we can change rainbow and alphablend pickers orientation
+Adding a horizontal field with the value set to true, we can change rainbow and alphablend pickers orientation.
 
 ```js
 let config = {
@@ -98,9 +106,13 @@ let config = {
 let colorpicker = new colorex(config);
 ```
 
+<p align="center">
+    <img src="./image/horizontal.png">
+</p>
+
 ## Horizontal custom pickers
 
-Changes orientation is possible for selcted picker. You must build yours own DOM for component and hint elements for part of component.
+Changes orientation is possible for selected picker. You have to build yours own DOM for component and indicate each element of colorex component. Possible is indicate elements by class, id, object of element or any selectors.
 
 ```js
 let config = {
@@ -116,8 +128,7 @@ let config = {
 let colorpicker = new colorex(config);
 ```
 
-Below is example DOM of component and extend colorex class in CSS. Class colorex is necesaty on main element, but you can added new classes with overrite style values. If you don't set this, 
-your control may visible bad.
+Below is example DOM of component and extend colorex class in CSS. Class of colorex is necesaty on main element, but you can added new classes with overrited styles values. If you don't set it, your component may does not look well.
 
 ```html
 <div class="colorex">
@@ -140,9 +151,13 @@ your control may visible bad.
 }
 ```
 
-## Pixelize
+<p align="center">
+    <img src="./image/custom-horizontal.png">
+</p>
 
-Pixelize is feature with step draw color on pickers and step changes values on them. Pixelize with 0 value work like config without pixalize field.
+## Pixelation
+
+The pixelize is feature with step draw color on pickers and step changing values on them. Pixelize field with the value set to 0 work like configuration without pixalize field.
 
 ```js
 let config = {
@@ -154,9 +169,13 @@ let config = {
 let colorpicker = new colorex(config);
 ```
 
-## Pixelize custom element
+<p align="center">
+    <img src="./image/pixelize.png">
+</p>
 
-Similar to horizontal custom element, user can customize all pickers. On this situation own DOM build is not necesary.
+## Pixelization selected element
+
+Similar to horizontal custom element, user can customize all pickers separately. On this situation own DOM for component is not necessary.
 
 ```js
 let config = {
@@ -169,9 +188,13 @@ let config = {
 let colorpicker = new colorex(config);
 ```
 
+<p align="center">
+    <img src="./image/custom-pixelize.png">
+</p>
+
 ## Customize style
 
-To personalize layout of all component you should override style of css. You can look to file colorex.css which style you need do override. You can also presonalize layout by oberride below variabes which are predefined and used in colorex.css.
+To personalize layout of all component you should override style of css. You can look to file [colorex.css](./dist/colorex.css) which style you need do override. You can also presonalize layout by overrided below variabes which are predefined and used in [colorex.css](./dist/colorex.css).
 
 ```css
 .colorex {
@@ -184,3 +207,7 @@ To personalize layout of all component you should override style of css. You can
     --alpha-background: #eeeeee;
 }
 ```
+
+<p align="center">
+    <img src="./image/personalize.png">
+</p>
