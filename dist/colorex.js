@@ -1376,7 +1376,7 @@ function colorex(config) {
   }
 }
 
-Object(modularization["a" /* default */])(colorex);
+Object(modularization["a" /* default */])(colorex, 'colorex');
 /* harmony default export */ var src_colorex = __webpack_exports__["default"] = (colorex);
 
 /***/ })

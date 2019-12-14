@@ -95,6 +95,6 @@ function colorex(config) {
     }
 }
 
-modularization(colorex);
+modularization(colorex, 'colorex');
 
 export default colorex;
