@@ -2,7 +2,7 @@
 
 Engine of color picker which you can use to create a component in any javascript framework.
 
-[Live demo](./demo/)
+[Live demo](https://exnext.github.io/colorex/demo/)
 
 ## Start in your website
 
