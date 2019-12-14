@@ -2,7 +2,9 @@
 
 Engine of color picker which you can use to create a component in any javascript framework.
 
-## Start in your website.
+[Live demo](./demo/)
+
+## Start in your website
 
 ```html
 <link href="colorex.css" rel="stylesheet">
