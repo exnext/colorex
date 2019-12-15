@@ -79,7 +79,7 @@ let picker = (() => {
         setSelectorPosition(point) {
             this[_point] = { x: point.x, y: point.y };
             let color = this.pointColor(point);
-            this.selector.style.background = color;
+            this.selector.style.background = colorConvert(color).hex(false);
         }
 
         pointColor(point) {
@@ -95,7 +95,8 @@ let picker = (() => {
         setColor(value) {
             this[_color] = value;
             this.draw(this[_color]);
-            this.selector.style.background = this.pointColor(this[_point]);
+            let color = this.pointColor(this[_point]);
+            this.selector.style.background = colorConvert(color).hex(false);
         }
 
         pointByPixelize(point) {

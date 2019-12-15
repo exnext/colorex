@@ -165,7 +165,7 @@ The pixelize is feature with step draw color on pickers and step changing values
 let config = {
     picker: '.picker6',
     alphablend: true,
-    pixelize: 10
+    pixelize: 7
 };
 
 let colorpicker = new colorex(config);
@@ -201,8 +201,10 @@ To personalize layout of all component you should override style of css. You can
 ```css
 .colorex {
     --border-width: 2px;
+    --border-color: lightgrey;
     --space-between: 16px;
     --gradient-selector-size: 30px;
+    --gradient-selector-border-color: white;
     --gradient-size: 300px;
     --picker-selector-size: 14px;
     --picker-size: 40px;
