@@ -454,7 +454,7 @@ function colorConvert(color) {
     var color = '#' + _rgba.r.toString(16).padStart(2, '0') + _rgba.g.toString(16).padStart(2, '0') + _rgba.b.toString(16).padStart(2, '0');
 
     if (withAlpha) {
-      color += (_rgba.a || 255).toString(16).padStart(2, '0');
+      color += (_rgba.a || 0).toString(16).padStart(2, '0');
     }
 
     return color;
@@ -755,7 +755,7 @@ var picker = function () {
             y: point.y
           };
           var color = this.pointColor(point);
-          this.selector.style.background = color;
+          this.selector.style.background = src_colorConvert(color).hex(false);
         }
       }, {
         key: "pointColor",
@@ -776,7 +776,8 @@ var picker = function () {
         value: function setColor(value) {
           this[_color] = value;
           this.draw(this[_color]);
-          this.selector.style.background = this.pointColor(this[_point]);
+          var color = this.pointColor(this[_point]);
+          this.selector.style.background = src_colorConvert(color).hex(false);
         }
       }, {
         key: "pointByPixelize",
@@ -842,6 +843,16 @@ function (_picker) {
   _createClass(picker1D, [{
     key: "setSelectorPosition",
     value: function setSelectorPosition(point) {
+      var _this$size3 = this.size(),
+          width = _this$size3.width,
+          height = _this$size3.height;
+
+      if (this.horizontal) {
+        point.y = height / 2;
+      } else {
+        point.x = width / 2;
+      }
+
       _get(_getPrototypeOf(picker1D.prototype), "setSelectorPosition", this).call(this, point);
 
       var _this$pointByPixelize = this.pointByPixelize(point),
@@ -1234,13 +1245,13 @@ function (_picker1D) {
 
       if (this.horizontal) {
         return {
-          y: height,
+          y: height / 2,
           x: Math.round(width - width * alphaValue / 255)
         };
       } else {
         return {
           y: Math.round(height - height * alphaValue / 255),
-          x: width
+          x: width / 2
         };
       }
     }
@@ -1259,8 +1270,11 @@ function (_picker1D) {
   }, {
     key: "alphaValue",
     value: function alphaValue() {
+      var _this$point = this.point,
+          x = _this$point.x,
+          y = _this$point.y;
       var ctx = this.canvas.getContext("2d");
-      var rgba = ctx.getImageData(this.point.x, this.point.y, 1, 1).data;
+      var rgba = ctx.getImageData(x, y, 1, 1).data;
       return rgba[3];
     }
   }]);

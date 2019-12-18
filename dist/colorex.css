@@ -1,5 +1,7 @@
 .colorex {
     --border-width: 2px;
+    --border-color: lightgrey;
+    --selector-border-color: white;
     --space-between: 16px;
     --gradient-selector-size: 30px;
     --gradient-size: 300px;
@@ -19,13 +21,15 @@
 
 .colorex .rainbow, .colorex .gradient, .colorex .alpha {
     position: relative;
-    border: var(--border-width) solid lightgrey;
+    border: var(--border-width) solid var(--border-color);
     margin: calc(var(--space-between) / 2);
 }
 
 .colorex .selector {
     position: absolute;
-    border: var(--border-width) solid white;
+    border: var(--border-width) solid var(--selector-border-color);
+    -webkit-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
+    -moz-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
     transition: left 0.2s ease, top 0.2s ease;
     z-index: 1;
@@ -40,6 +44,8 @@
     width: var(--gradient-selector-size);
     height: var(--gradient-selector-size);
     border-radius: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     z-index: 2;
 }
@@ -61,6 +67,8 @@
 .colorex .alpha:not(.horizontal) .selector {
     width: calc(100% + var(--border-width) + var(--border-width));
     height: var(--picker-selector-size);
+    -webkit-transform: translate(calc(0px - var(--border-width) - var(--border-width)), -50%);
+    -moz-transform: translate(calc(0px - var(--border-width) - var(--border-width)), -50%);
     transform: translate(calc(0px - var(--border-width) - var(--border-width)), -50%);
 }
 
@@ -69,6 +77,8 @@
     height: calc(100% + var(--border-width) + var(--border-width));
     width: var(--picker-selector-size);
     top: 0;
+    -webkit-transform: translate(-50%, calc(0px - var(--border-width) - var(--border-width)));
+    -moz-transform: translate(-50%, calc(0px - var(--border-width) - var(--border-width)));
     transform: translate(-50%, calc(0px - var(--border-width) - var(--border-width)));
 }
 

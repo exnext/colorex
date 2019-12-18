@@ -120,6 +120,6 @@ colorPickers.push(new colorex({
     },
     horizontal: { rainbow: false, alpha: alphablend },
     alphablend: alphablend,
-    color: '#760089',
+    color: '#5d91c868',
     onChange: changeColor
 }));

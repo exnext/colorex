@@ -50,13 +50,13 @@ class alphaPicker extends picker1D {
 
         if (this.horizontal) {
             return {
-                y: height,
+                y: height / 2,
                 x: Math.round(width - width * alphaValue / 255)
             };
         } else {
             return {
                 y: Math.round(height - height * alphaValue / 255),
-                x: width
+                x: width / 2
             };
         }
     }
@@ -71,8 +71,9 @@ class alphaPicker extends picker1D {
     }
 
     alphaValue() {
+        let { x, y } = this.point;
         let ctx = this.canvas.getContext("2d");
-        let rgba = ctx.getImageData(this.point.x, this.point.y, 1, 1).data;
+        let rgba = ctx.getImageData(x, y, 1, 1).data;
         return rgba[3];
     }
 }

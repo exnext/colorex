@@ -136,6 +136,14 @@ let picker = (() => {
 
 class picker1D extends picker {
     setSelectorPosition(point) {
+        const { width, height } = this.size();
+        
+        if (this.horizontal) {
+            point.y = height / 2;
+        } else {
+            point.x = width / 2;
+        }        
+        
         super.setSelectorPosition(point);
 
         let { x, y } = this.pointByPixelize(point);

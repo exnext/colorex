@@ -114,7 +114,7 @@ function colorConvert(color) {
             _rgba.b.toString(16).padStart(2, '0');
 
         if (withAlpha) {
-            color += (_rgba.a || 255).toString(16).padStart(2, '0');
+            color += (_rgba.a || 0).toString(16).padStart(2, '0');
         }
 
         return color;

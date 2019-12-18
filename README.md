@@ -15,6 +15,8 @@ Engine of color picker which you can use to create a component in any javascript
 
 Example from below presents a code to create a simple component with rainbow and gradient pickers.
 
+[Live demo @ jsfiddle](https://jsfiddle.net/exnext/hk7ba8ux/)
+
 ```js
 let config = {
     picker: '#picker1'
@@ -47,6 +49,8 @@ let color = colorpicker.color; //#0000ff
 
 Adding an alphablend field with the value set to true, we create colorex component with alpha blend picker. Getter of the color property return hexadecimal value with alpha level.
 
+[Live demo @ jsfiddle](https://jsfiddle.net/exnext/n0yjb5ce/)
+
 ```js
 let config = {
     picker: '.picker2',
@@ -69,6 +73,8 @@ let color = colorpicker.color; //#0000ff7f
 
 Create component with initial value of the color if default color should not be visible on the start.
 
+[Live demo @ jsfiddle](https://jsfiddle.net/exnext/wa96ns7p/)
+
 ```js
 let config = {
     picker: document.getElementById("picker3"),
@@ -84,6 +90,8 @@ let color = colorpicker.color;
 
 All click events on each picker evokes onChange event. Its argument has included new value of color, which can also be read from color field of colorex component.
 
+[Live demo @ jsfiddle](https://jsfiddle.net/exnext/c3sptan5/)
+
 ```js
 let config = {
     picker: document.querySelector('#picker4'),
@@ -98,6 +106,8 @@ let colorpicker = new colorex(config);
 ## Horizontal pickers
 
 Adding a horizontal field with the value set to true, we can change rainbow and alphablend pickers orientation.
+
+[Live demo @ jsfiddle](https://jsfiddle.net/exnext/hkzgurpf/)
 
 ```js
 let config = {
@@ -116,6 +126,8 @@ let colorpicker = new colorex(config);
 
 Changes orientation is possible for selected picker. You have to build yours own DOM for component and indicate each element of colorex component. Possible is indicate elements by class, id, object of element or any selectors.
 
+[Live demo @ jsfiddle](https://jsfiddle.net/exnext/g5qbsrhe/)
+
 ```js
 let config = {
     picker: {
@@ -123,6 +135,7 @@ let config = {
         gradient: document.getElementById('gradient'),
         alpha: document.querySelector('.alpha')
     },
+    alphablend: true,
     horizontal: { rainbow: false, alpha: true }
     // horizontal: { alpha: true }
 };
@@ -161,10 +174,11 @@ Below is example DOM of component and extend colorex class in CSS. Class of colo
 
 The pixelize is feature with step draw color on pickers and step changing values on them. Pixelize field with the value set to 0 work like configuration without pixalize field.
 
+[Live demo @ jsfiddle](https://jsfiddle.net/exnext/56yfpk4q/)
+
 ```js
 let config = {
     picker: '.picker6',
-    alphablend: true,
     pixelize: 7
 };
 
@@ -178,6 +192,8 @@ let colorpicker = new colorex(config);
 ## Pixelization selected element
 
 Similar to horizontal custom element, user can customize all pickers separately. On this situation own DOM for component is not necessary.
+
+[Live demo @ jsfiddle](https://jsfiddle.net/exnext/cqre46s9/)
 
 ```js
 let config = {
@@ -196,15 +212,15 @@ let colorpicker = new colorex(config);
 
 ## Customize style
 
-To personalize layout of all component you should override style of css. You can look to file [colorex.css](./dist/colorex.css) which style you need do override. You can also presonalize layout by overrided below variabes which are predefined and used in [colorex.css](./dist/colorex.css).
+To personalize layout of all component you should override style of css. You can look to file [colorex.css](./dist/colorex.css) which style you need do override. You can also presonalize layout by overrided below variables which are predefined and used in [colorex.css](./dist/colorex.css).
 
 ```css
 .colorex {
     --border-width: 2px;
     --border-color: lightgrey;
+    --selector-border-color: white;
     --space-between: 16px;
     --gradient-selector-size: 30px;
-    --gradient-selector-border-color: white;
     --gradient-size: 300px;
     --picker-selector-size: 14px;
     --picker-size: 40px;
