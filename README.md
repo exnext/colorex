@@ -28,7 +28,8 @@ let colorpicker = new colorex(config);
 ```
 
 <p align="center">
-    <img src="./image/simple.png">
+    <!-- <img src="./image/simple.png"> -->
+    <script async src="//jsfiddle.net/exnext/hk7ba8ux/embed/"></script>
 </p>
 
 ## Set and get color
@@ -196,15 +197,15 @@ let colorpicker = new colorex(config);
 
 ## Customize style
 
-To personalize layout of all component you should override style of css. You can look to file [colorex.css](./dist/colorex.css) which style you need do override. You can also presonalize layout by overrided below variabes which are predefined and used in [colorex.css](./dist/colorex.css).
+To personalize layout of all component you should override style of css. You can look to file [colorex.css](./dist/colorex.css) which style you need do override. You can also presonalize layout by overrided below variables which are predefined and used in [colorex.css](./dist/colorex.css).
 
 ```css
 .colorex {
     --border-width: 2px;
     --border-color: lightgrey;
+    --selector-border-color: white;
     --space-between: 16px;
     --gradient-selector-size: 30px;
-    --gradient-selector-border-color: white;
     --gradient-size: 300px;
     --picker-selector-size: 14px;
     --picker-size: 40px;
