@@ -4,11 +4,17 @@ Engine of color picker which you can use to create a component in any javascript
 
 [Live demo](https://exnext.github.io/colorex/demo/)
 
+## NPM
+
+```bash
+npm install colorex
+```
+
 ## Start in your website
 
 ```html
-<link href="colorex.css" rel="stylesheet">
-<script type='text/javascript' src='colorex.js'></script>
+<link href="//unpkg.com/colorex/dist/colorex.min.css" rel="stylesheet">
+<script type='text/javascript' src='//unpkg.com/colorex/dist/colorex.min.js'></script>
 ```
 
 ## Create a simple component

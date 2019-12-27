@@ -6,12 +6,21 @@ button {
     margin: 5px;
     padding: 5px;
     border: none;
-    width: 80px;
+    width: 100px;
     font-weight: 100;
 }
 
-input {
-    margin: 5px;
+.row {
+    margin: 0px;
+}
+
+.colors-panel {
+    text-align: center;
+    width: 360px;
+}
+
+#colors {
+    text-align: left;
 }
 
 .pickers {

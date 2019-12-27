@@ -10,12 +10,7 @@
             "name": "Launch demo",
             "program": "${workspaceFolder}/node_modules/webpack-dev-server/bin/webpack-dev-server.js",
             "args": [
-                "--open",
-                "--https",
-                "--cert",
-                "../../_ssl/exnext/server.crt",
-                "--key",
-                "../../_ssl/exnext/server.key"
+                "--open"
             ],
         }
     ]

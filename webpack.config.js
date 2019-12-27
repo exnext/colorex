@@ -61,6 +61,6 @@ module.exports = {
         contentBase: path.resolve(__dirname, ''),
         port: 8080,
         publicPath: '/',
-        openPage: '/demo'
+        openPage: 'demo'
     }
 }
