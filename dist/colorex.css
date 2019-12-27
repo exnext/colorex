@@ -11,6 +11,11 @@
     display: flex;
 }
 
+.colorex, .colorex::after, .colorex::before,
+.colorex *, .colorex *::after, .colorex *::before {
+    box-sizing: initial;
+}
+
 .colorex.column {
     flex-direction: column;
 }

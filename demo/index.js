@@ -19,6 +19,8 @@ function addButtonColor(color) {
         buttonColors.push(color);
 
         let button = document.createElement('button');
+        button.classList.add('btn');
+        button.classList.add('btn-sm');
         button.innerHTML = color;
         button.style.background = color;
         button.addEventListener('click', (e) => {
